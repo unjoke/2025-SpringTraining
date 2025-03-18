@@ -76,6 +76,7 @@ cat /flag
 $IFS等价空格
 
 2.管道符
+
 ![屏幕截图 2025-03-18 175033](https://github.com/user-attachments/assets/b544268f-76ba-4b01-b7a1-4dd37a382acf)
 
 3.反斜杠\绕过
