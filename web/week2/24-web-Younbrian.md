@@ -65,8 +65,21 @@ X-Forwarded-For: client, proxy1, proxy2
 
 ### php散题
 #### [SWPUCTF 2022 新生赛]奇妙的MD5
+奇妙の字符串
+![屏幕截图 2025-03-18 191620](https://github.com/user-attachments/assets/66a30884-2a31-48ec-8783-e16d4b13d18b)
+![屏幕截图 2025-03-18 191939](https://github.com/user-attachments/assets/3f4f4572-3b47-42aa-b97a-9f0836b8d869)
+
+![屏幕截图 2025-03-18 192229](https://github.com/user-attachments/assets/4d1c0226-4aef-4e20-a01a-67544261f011)
+![屏幕截图 2025-03-18 204827](https://github.com/user-attachments/assets/bbdabe34-836a-4c35-a094-8db7478b2bbe)
+
 
 #### [BJDCTF 2020]easy_md5
+![屏幕截图 2025-03-18 205313](https://github.com/user-attachments/assets/48cede0b-068a-4963-a9be-8ee40e23b47f)
+
+![屏幕截图 2025-03-18 205823](https://github.com/user-attachments/assets/95637f25-04ed-4262-916e-4edc6c3f8b0a)
+
+![屏幕截图 2025-03-18 210011](https://github.com/user-attachments/assets/ea7cb8fc-5c94-41b8-8082-619fa7be6a20)
+![屏幕截图 2025-03-18 210023](https://github.com/user-attachments/assets/4d0be5a7-17d6-49aa-af68-a481b9953741)
 
 
 ### 学习
@@ -90,3 +103,38 @@ l\s /
 ![屏幕截图 2025-03-18 175642](https://github.com/user-attachments/assets/c869aa3d-7714-4725-aff7-a143c866d36a)
 
 #### 文件包含
+原理
+在程序员开发过程中，通常可能会把可重复使用的函数写到单个文件中，在使用某些函数时，直接调用此文件，无需再编写，开发人员一般希望代码更灵活，所以将被包含的文件设置为变量，来进行动态调用，但是正是这种灵活性通过动态变量的方式引入需要包含的文件时，用户对这个变量可控且服务端没有做合理校验或被绕过
+
+常见的文件包含函数
+1.include()
+只有代码执行导函数所在行才将文件包含进来，发生错误时给一个警告，然后向下继续
+
+2.include_once()
+功能和include()相同，区别在于程序调用同一文件时，只调用一次
+
+3.require()
+require()与include()的区别在于require()执行如果发生错误，函数会输出错误信息，并终止脚本的运行
+
+4.require_once()
+与include_once类似
+
+5.highlight_file(),show_source()
+函数对文件进行语法高亮显示，通常能看到源代码
+
+6.readfile(),file_get_contents()
+函数读取一个文件，并写入到输出缓冲
+
+7.fopen()
+打开一个文件或者url
+
+文件包含分类
+本地包含
+即包含目标服务器本身的文件
+
+远程文件包含
+包含第三方服务器的文件
+条件：php.ini中的配置选项allow_url_fopen和allow_url_include为on的话，则包含的文件可以是第三方服务器中的文件
+如下图包含的文件为kali虚拟机上面的文件
+注意：利用远程文件包含时，在远程服务器上被包含的文件一定不能是php文件否则达不到攻击目标服务器的效果
+例：我们得知A服务器可以远程文件包含，此时只需在本地创建一个一句话木马的txt文件（导入非php文件仍按照php语法解析），然后打开apache,接着给A服务器传文件名参数时把本地一句话木马文件路径上传，然后访问，就能通过一句话木马执行命令控制A服务器，如果上传的是php文件，那么一句话木马最后作用于自己电脑上而不是目标服务器
