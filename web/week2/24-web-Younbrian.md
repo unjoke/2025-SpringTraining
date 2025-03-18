@@ -36,17 +36,32 @@ X-Forwarded-For: client, proxy1, proxy2
 ![屏幕截图 2025-03-18 102154](https://github.com/user-attachments/assets/2fa158c1-2e2c-4a7a-a465-f9bafbff91fc)
 
 ### 路径扫描，git泄露
-
 #### [LitCTF 2023]就当无事发生
+看着题目发布时间去翻了一下2023文件夹3，4，5月的更改记录
 ![屏幕截图 2025-03-18 000737](https://github.com/user-attachments/assets/d7d7174b-3ca5-421d-af48-0d4a8de03064)
-
-
 #### [第五空间 2021]WebFTP
+![屏幕截图 2025-03-18 171632](https://github.com/user-attachments/assets/c353548f-eeda-4f03-a5b4-608c8db487bc)
+扫描出路径来无从下手（经验还是太少了QWQ），看了一下wp，才知道要访问哪个文件
+![屏幕截图 2025-03-18 111906](https://github.com/user-attachments/assets/1a740683-8c32-48bc-bb0f-ab139e3268a4)
 
 ### 命令执行
 #### [SWPUCTF 2021 新生赛]easyrce
-
+![屏幕截图 2025-03-18 112503](https://github.com/user-attachments/assets/a4036992-fdfe-4e3f-bac3-cbb854981ea5)
+![屏幕截图 2025-03-18 112533](https://github.com/user-attachments/assets/ea1c233b-895d-4229-8ff2-f7b8063294f7)
 #### [LitCTF 2023]Ping
+抓包
+![屏幕截图 2025-03-18 113255](https://github.com/user-attachments/assets/5d2ebd3a-0c15-4483-a07d-0021daa33755)
+![屏幕截图 2025-03-18 172447](https://github.com/user-attachments/assets/45c4662e-a22c-42f9-a589-c831b740550d)
+看到一个javascript函数，应该是起过滤作用
+问了一下AI那个正则
+![屏幕截图 2025-03-18 114801](https://github.com/user-attachments/assets/b30e24f5-3a45-47d4-8bb3-6cd703e08b19)
+然后把浏览器的javascript禁了，还是不行
+
+又去搜了一下rce绕过过滤的一些方法(写在后面)，输入127.0.0.1|ls /得到目录列表
+
+![屏幕截图 2025-03-18 124613](https://github.com/user-attachments/assets/58155404-4781-4767-b220-215c8db97de9)
+![屏幕截图 2025-03-18 170701](https://github.com/user-attachments/assets/52db6c41-591c-446c-944e-3b4854a6989e)
+
 
 ### php散题
 #### [SWPUCTF 2022 新生赛]奇妙的MD5
