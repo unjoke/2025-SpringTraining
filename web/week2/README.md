@@ -28,7 +28,17 @@
 
 ## 学习要求
 
-* 学ctf比较重要的一点就是学会自己搜索学习，所以以后任务在布置必做题后，只会给你学习方向，要求你尽可能的学
+* 学ctf比较重要的一点就是学会自己搜索学习。
+
 * 下面列出学习方向：
-  1. 强化学习**rce命令执行**，掌握一些过滤绕过方法
-  2. 学习**文件包含**，理解并自行找一些题做
+  1. 强化学习**rce命令执行**，掌握一些过滤绕过方法；
+  
+     完成在文件夹docs里的题目（给予docker的构建文件，自行使用docker部署到本地做）
+  
+  2. 学习**文件包含**，这里分享一篇文章
+     [文件包含漏洞详解](https://blog.csdn.net/weixin_58849785/article/details/137630067)；
+     并完成PHPinclude_labs的`level0`到`level11`，有能力的全部做完。
+     这里提供源码位置[PHPinclude-labs](https://github.com/ProbiusOfficial/PHPinclude-labs),可自行构建docker镜像，也可以直接使用我在docker hub发布的已构建的镜像（直接搜chrizsty/include_labs,或者访问镜像地址[chrizsty/include_labs](https://hub.docker.com/r/chrizsty/include_labs)下载）
+  
+* 学有余力的同学，可以准备开始学习sql注入的基础知识，目前先以mysql数据库为主，同样分享一篇文章
+  [SQL注入入门](https://hello-ctf.com/hc-web/sql_injection/)
