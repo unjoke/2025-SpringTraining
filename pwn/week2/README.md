@@ -1,5 +1,5 @@
 1. 学习markdown基本语法 [Markdown 基本语法 | Markdown 教程](https://markdown.com.cn/basic-syntax/)，之后的笔记全用md文件记录，并选择一个md软件记录在上面，这边推荐几个软件：
-  - Trpora: https://github.com/amazingcoderpro/TyproaCrack/tree/main?tab=readme-ov-file
+  - Typora: https://github.com/amazingcoderpro/TyproaCrack/tree/main?tab=readme-ov-file
   - 语雀
   - 飞书
   - Obsidian
