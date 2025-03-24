@@ -16,6 +16,7 @@
 2. 也可以去nss等平台上找构建好的环境
 
 ### 学有余力
+做一下这次的[Round#28 Team]，链接在：[NSS](https://www.nssctf.cn/problem)直接搜索Round#28即可
 
 可以学习php反序列化，给一篇我觉得还可以的文章
 
