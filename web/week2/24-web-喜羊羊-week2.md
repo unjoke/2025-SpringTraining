@@ -116,13 +116,12 @@ usefull strings：提供了一些特殊的数值如圆周率PI,斐波那契数�
 ![20250324232639403](https://github.com/user-attachments/assets/4ada0690-7893-4836-a2b1-a3cce6af3009)
 
 
-![image-20250324232639303](C:\Users\ASUS\Desktop\webs\week2\20250324232639403.png)
 
 
 
 ## [SWPUCTF 2022 新生赛]奇妙的MD5
+![20250324233115841](https://github.com/user-attachments/assets/7ec8776e-8775-4a90-be75-231968417719)
 
-![image-20250324233115790](C:\Users\ASUS\Desktop\webs\week2\20250324233115841.png)
 
 奇妙的字符串，又跟 MD5 有关
 
@@ -130,9 +129,10 @@ usefull strings：提供了一些特殊的数值如圆周率PI,斐波那契数�
 
 **另一个是 MD5 加密后变成万能密码，这个字符串是 ffifdyop**
 
-![image-20250324233321694](C:\Users\ASUS\Desktop\webs\week2\20250324233321868.png)
+![20250324233321868](https://github.com/user-attachments/assets/bf0bb2cd-b028-4828-b943-897bc9e5cf05)
 
-![image-20250324233629927](C:\Users\ASUS\Desktop\webs\week2\20250324233630179.png)
+![20250324233630179](https://github.com/user-attachments/assets/e480db2a-d807-4164-a9d1-abfa13a0dea4)
+
 
 右键看看源代码
 
