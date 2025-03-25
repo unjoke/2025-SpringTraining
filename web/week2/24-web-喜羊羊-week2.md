@@ -188,7 +188,8 @@ md5()函数会将我们输入的值，加密，然后转换成16字符的二进�
 
 看看源码
 
-![image-20250325110119468](C:\Users\ASUS\Desktop\webs\week2\20250325110119526.png)
+![20250325110119526](https://github.com/user-attachments/assets/f0c14482-f137-4b6d-9678-44aee3fd2355)
+
 
 if($a != $b && md5($a) == md5($b))
 
@@ -198,21 +199,25 @@ if($a != $b && md5($a) == md5($b))
 
 QNKCDZO（0e830400451993494058024219903391）
 
-![image-20250325111504228](C:\Users\ASUS\Desktop\webs\week2\20250325111504427.png)
+![20250325111504427](https://github.com/user-attachments/assets/306243f9-1dfc-4e25-a8e4-bf9f4f7c7fdd)
+
 
 post的param1和param2不能相等，然后强比较，
 
-![image-20250325112210068](C:\Users\ASUS\Desktop\webs\week2\20250325112210272.png)
+![20250325112210272](https://github.com/user-attachments/assets/9e8170ba-52da-490f-ba28-2b1cf06e4ca2)
+
 
 重新load以后，利用数组绕过，构造，传参
 
 ## [第五空间 2021]WebFTP
+![20250325113618176](https://github.com/user-attachments/assets/db740f73-6461-4fef-9e2f-9a03e4e1a7a3)
 
-![image-20250325113618021](C:\Users\ASUS\Desktop\webs\week2\20250325113618176.png)
+
 
 随意地输入一些东西进去，没啥效果，源码也没什么特别的，根据提示，用dirsearch扫描后台
 
-![image-20250325114241341](C:\Users\ASUS\Desktop\webs\week2\20250325114241420.png)
+
+![20250325114241420](https://github.com/user-attachments/assets/84f3cd16-fc7d-418f-9d2e-b519fe300ecb)
 
 
 
@@ -220,13 +225,15 @@ post的param1和param2不能相等，然后强比较，
 
 里面有一个叫phpinfo的，进去看看。
 
-![image-20250325114448136](C:\Users\ASUS\Desktop\webs\week2\20250325114448274.png)
+
+![20250325114448274](https://github.com/user-attachments/assets/8c7b60f2-44cc-4ca1-8797-2941174c984c)
 
 
 
 这就进来了，懒得找flag,ctrl f直接搜。
 
-![image-20250325114620693](C:\Users\ASUS\Desktop\webs\week2\20250325114620900.png)
+
+![20250325114620900](https://github.com/user-attachments/assets/5131c8c7-dd37-49f9-ba2b-f47223da380b)
 
 
 
