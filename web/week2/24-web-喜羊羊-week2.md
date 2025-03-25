@@ -51,33 +51,34 @@ usefull strings：提供了一些特殊的数值如圆周率PI,斐波那契数�
 
 使用POST提交方法和GET类似，将GET改为POST，此时记得添加Content-Type: application/x-www-form-urlencoded
 
-![image-20250318184735320](https://raw.githubusercontent.com/30-STEPh/photos/main/20250324012209739.png)![image-20250318184735320](https://github.com/user-attachments/assets/db844bcf-ce6a-4e90-95f0-a81a95429908)
+![image-20250318184735320](https://github.com/user-attachments/assets/db844bcf-ce6a-4e90-95f0-a81a95429908)
 
 
-![image-20250318185055295](https://raw.githubusercontent.com/30-STEPh/photos/main/20250324012214290.png)![image-20250318185055295](https://github.com/user-attachments/assets/6884da2a-4494-4924-b496-528066e64666)
+![image-20250318185055295](https://github.com/user-attachments/assets/6884da2a-4494-4924-b496-528066e64666)
 
 
 ## [SWPUCTF 2021 新生赛]Do_you_know_http
 
-![image-20250319214553466](https://raw.githubusercontent.com/30-STEPh/photos/main/20250324012219002.png)![image-20250319214553466](https://github.com/user-attachments/assets/027b049d-4e4e-461f-9bb3-627c44f5c7aa)
+![image-20250319214553466](https://github.com/user-attachments/assets/027b049d-4e4e-461f-9bb3-627c44f5c7aa)
 
 
-![image-20250319215015202](https://raw.githubusercontent.com/30-STEPh/photos/main/20250324012221966.png)![image-20250319215015202](https://github.com/user-attachments/assets/2ffaf2bb-fd46-4e3e-b9c6-66eb87effa38)
+![image-20250319215015202](https://github.com/user-attachments/assets/2ffaf2bb-fd46-4e3e-b9c6-66eb87effa38)
 
 
-![image-20250319215631798](https://raw.githubusercontent.com/30-STEPh/photos/main/20250324012228667.png)![image-20250319215631798](https://github.com/user-attachments/assets/5aec2581-f701-40fa-8bde-dbe211022e92)
+![image-20250319215631798](https://github.com/user-attachments/assets/5aec2581-f701-40fa-8bde-dbe211022e92)
 
 
 修改user agent为WLLM   execute一下
 
-![image-20250319220536064](https://raw.githubusercontent.com/30-STEPh/photos/main/20250324012225307.png)![image-20250319220536064](https://github.com/user-attachments/assets/e2fbe81f-6ce2-4c1d-9ac1-2424e7f9bc6a)
+![image-20250319220536064](https://github.com/user-attachments/assets/e2fbe81f-6ce2-4c1d-9ac1-2424e7f9bc6a)
 
 
 不难发现，我们要伪造一个用WLLM浏览器的进入方式，即修改user agent,得到一个a.php的文件，这个文件只能在本地打开，我们要在<font color='green'>本地回环地址</font>中打开，得到答案。
 
 ## [LitCTF 2023]就当无事发生
 
-![image-20250323153416596](https://raw.githubusercontent.com/30-STEPh/photos/main/20250324012232690.png)
+![image-20250323153416596](https://github.com/user-attachments/assets/cd0245a0-73e6-4366-9b67-ea3a97271261)
+
 
 进入了一个网站，不明白这道题想干嘛。
 
@@ -89,7 +90,7 @@ usefull strings：提供了一些特殊的数值如圆周率PI,斐波那契数�
 
 ## [SWPUCTF 2021 新生赛]easyrce
 
-![image-20250324231237778](C:\Users\ASUS\Desktop\webs\week2\20250324231245020.png)
+![20250324231245020](https://github.com/user-attachments/assets/8bb16885-37db-411e-9f78-76e981ba81ac)
 
 
 
@@ -104,12 +105,15 @@ usefull strings：提供了一些特殊的数值如圆周率PI,斐波那契数�
 
 总得来说就是一个叫url的可以在网址中显示的变量，如果得到他的值不为空，就按php语法执行eval函数的语句,获取 **URL 查询参数** 的超全局变量（superglobal）。  返回url的值,这个时候可以通过url执行命令，找出文件的目录,通过system执行外部命令,**列出根目录内容，采用ls /**但是这是一个url里面执行的命令，直接输入**空格**会报错，因此空格经过**url编码**之后变成**%20**输入命令，可以看到一个可疑文件flag
 
-![image-20250324232223206](C:\Users\ASUS\Desktop\webs\week2\20250324232223261.png)
+![20250324232223261](https://github.com/user-attachments/assets/53a4e573-8e0f-4b56-8cf8-a7c2ffe4da3e)
+
 
 选择查看这个文件，利用cat查看文件内容
 
-![image-20250324232620671](C:\Users\ASUS\Desktop\webs\week2\20250324232620881.png)
+![20250324232620881](https://github.com/user-attachments/assets/2f097c6e-bb05-40ab-8643-a5973a51d443)
 
+
+![20250324232639403](https://github.com/user-attachments/assets/4ada0690-7893-4836-a2b1-a3cce6af3009)
 
 
 ![image-20250324232639303](C:\Users\ASUS\Desktop\webs\week2\20250324232639403.png)
