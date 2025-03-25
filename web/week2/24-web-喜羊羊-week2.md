@@ -136,19 +136,24 @@ usefull strings：提供了一些特殊的数值如圆周率PI,斐波那契数�
 
 右键看看源代码
 
-![image-20250324234104113](C:\Users\ASUS\Desktop\webs\week2\20250324234104344.png)
+![20250324234104344](https://github.com/user-attachments/assets/d9addcdc-bc6a-42b2-8a04-8cbdb637ee27)
+
 
 首先从url的查询参数中获取x和y的值，再进行判断，xy值不等而且xy的md5值要相等时if成立
 
 根据wp的提示，这是一个弱比较，方法包括且不仅限于使用数组绕过，传参?x[]=1&y[]=2
 
-![image-20250325000402121](C:\Users\ASUS\Desktop\webs\week2\20250325000402205.png)
+![20250325000402205](https://github.com/user-attachments/assets/2acc2a8e-bb36-41e1-9b63-8850ffa2ca6f)
 
-![image-20250325000424943](C:\Users\ASUS\Desktop\webs\week2\20250325000424987.png)
 
-![image-20250325030446648](C:\Users\ASUS\Desktop\webs\week2\20250325030446690.png)
+![20250325000424987](https://github.com/user-attachments/assets/58eecd4f-a4ae-4ead-b5a2-77c969216148)
 
-![image-20250325031936192](C:\Users\ASUS\Desktop\webs\week2\20250325031936239.png)
+![20250325030446690](https://github.com/user-attachments/assets/10362f06-84d4-41be-98da-7e73d624689e)
+
+![20250325031936239](https://github.com/user-attachments/assets/b19ddf03-6d2d-4f39-b9b7-996f59235c30)
+
+
+
 
 ## [BJDCTF 2020]easy_md5
 
