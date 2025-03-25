@@ -157,11 +157,13 @@ usefull strings：提供了一些特殊的数值如圆周率PI,斐波那契数�
 
 ## [BJDCTF 2020]easy_md5
 
-![image-20250325104552440](C:\Users\ASUS\Desktop\webs\week2\20250325104552633.png)
+![20250325104552633](https://github.com/user-attachments/assets/6fb3d559-6cc4-4179-aa66-5ffece0e1344)
+
 
 输入没什么反应，源码也没啥好看的，使用bp抓包试试
 
-![image-20250325104856293](C:\Users\ASUS\Desktop\webs\week2\20250325104856358.png)
+![20250325104856358](https://github.com/user-attachments/assets/2efe4f8b-d621-4e39-80cf-adb83a73ba6b)
+
 
 不做什么特别操作，随便按一下send，找到一个hint
 
@@ -181,7 +183,8 @@ md5()函数会将我们输入的值，加密，然后转换成16字符的二进�
 
 这个[字符串转换](https://so.csdn.net/so/search?q=字符串转换&spm=1001.2101.3001.7020)后为�T0D��o#��'or'8
 
-![image-20250325110017779](C:\Users\ASUS\Desktop\webs\week2\20250325110018000.png)
+![20250325110018000](https://github.com/user-attachments/assets/1cb90aee-7537-4e16-b96f-4aa819156f4c)
+
 
 看看源码
 
