@@ -39,12 +39,15 @@ usefull strings：提供了一些特殊的数值如圆周率PI,斐波那契数�
 大致是这样，以后会细细探究。
 
 ## [LitCTF 2023]Follow me and hack me--burpsuit
+![image-20250318173723058](https://github.com/user-attachments/assets/8f753230-6476-4e96-ab89-15df88a3127e)
+
 
 ![image-20250318173723058](https://raw.githubusercontent.com/30-STEPh/photos/main/20250324012200368.png)
 
 神经。。。。。。。。。。。。
 
 ![image-20250318184637559](https://raw.githubusercontent.com/30-STEPh/photos/main/20250324012205470.png)
+![image-20250318184637559](https://github.com/user-attachments/assets/f9fed70f-f08d-4d50-8b05-e301eb71c0fd)
 
 尝试向里面传参数， 在URL中使用?符号将参数附加到URL末尾，多个参数之间使用&符号分隔。
 
