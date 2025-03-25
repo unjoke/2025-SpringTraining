@@ -42,32 +42,36 @@ usefull strings：提供了一些特殊的数值如圆周率PI,斐波那契数�
 ![image-20250318173723058](https://github.com/user-attachments/assets/8f753230-6476-4e96-ab89-15df88a3127e)
 
 
-![image-20250318173723058](https://raw.githubusercontent.com/30-STEPh/photos/main/20250324012200368.png)
 
 神经。。。。。。。。。。。。
 
-![image-20250318184637559](https://raw.githubusercontent.com/30-STEPh/photos/main/20250324012205470.png)
 ![image-20250318184637559](https://github.com/user-attachments/assets/f9fed70f-f08d-4d50-8b05-e301eb71c0fd)
 
 尝试向里面传参数， 在URL中使用?符号将参数附加到URL末尾，多个参数之间使用&符号分隔。
 
 使用POST提交方法和GET类似，将GET改为POST，此时记得添加Content-Type: application/x-www-form-urlencoded
 
-![image-20250318184735320](https://raw.githubusercontent.com/30-STEPh/photos/main/20250324012209739.png)
+![image-20250318184735320](https://raw.githubusercontent.com/30-STEPh/photos/main/20250324012209739.png)![image-20250318184735320](https://github.com/user-attachments/assets/db844bcf-ce6a-4e90-95f0-a81a95429908)
 
-![image-20250318185055295](https://raw.githubusercontent.com/30-STEPh/photos/main/20250324012214290.png)
+
+![image-20250318185055295](https://raw.githubusercontent.com/30-STEPh/photos/main/20250324012214290.png)![image-20250318185055295](https://github.com/user-attachments/assets/6884da2a-4494-4924-b496-528066e64666)
+
 
 ## [SWPUCTF 2021 新生赛]Do_you_know_http
 
-![image-20250319214553466](https://raw.githubusercontent.com/30-STEPh/photos/main/20250324012219002.png)
+![image-20250319214553466](https://raw.githubusercontent.com/30-STEPh/photos/main/20250324012219002.png)![image-20250319214553466](https://github.com/user-attachments/assets/027b049d-4e4e-461f-9bb3-627c44f5c7aa)
 
-![image-20250319215015202](https://raw.githubusercontent.com/30-STEPh/photos/main/20250324012221966.png)
 
-![image-20250319215631798](https://raw.githubusercontent.com/30-STEPh/photos/main/20250324012228667.png)
+![image-20250319215015202](https://raw.githubusercontent.com/30-STEPh/photos/main/20250324012221966.png)![image-20250319215015202](https://github.com/user-attachments/assets/2ffaf2bb-fd46-4e3e-b9c6-66eb87effa38)
+
+
+![image-20250319215631798](https://raw.githubusercontent.com/30-STEPh/photos/main/20250324012228667.png)![image-20250319215631798](https://github.com/user-attachments/assets/5aec2581-f701-40fa-8bde-dbe211022e92)
+
 
 修改user agent为WLLM   execute一下
 
-![image-20250319220536064](https://raw.githubusercontent.com/30-STEPh/photos/main/20250324012225307.png)
+![image-20250319220536064](https://raw.githubusercontent.com/30-STEPh/photos/main/20250324012225307.png)![image-20250319220536064](https://github.com/user-attachments/assets/e2fbe81f-6ce2-4c1d-9ac1-2424e7f9bc6a)
+
 
 不难发现，我们要伪造一个用WLLM浏览器的进入方式，即修改user agent,得到一个a.php的文件，这个文件只能在本地打开，我们要在<font color='green'>本地回环地址</font>中打开，得到答案。
 
