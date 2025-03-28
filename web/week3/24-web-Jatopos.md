@@ -107,10 +107,10 @@ php://filter 是一种元封装器， 设计用于数据流打开时的筛选过
 
 php://filter可以获取指定文件源码。当它与包含函数结合时，php://filter流会被当作php文件执行。所以我们一般对其进行编码，让其不执行。从而导致任意文件读取。
 
-resource=<要过滤的数据流> 这个参数是必须的。它指定了你要筛选过滤的数据流。
-read=<读链的筛选列表> 该参数可选。可以设定一个或多个过滤器名称，以管道符（|）分隔。
-write=<写链的筛选列表> 该参数可选。可以设定一个或多个过滤器名称，以管道符（|）分隔。
-<;两个链的筛选列表> 任何没有以 read= 或 write= 作前缀 的筛选器列表会视情况应用于读或写链。
+resource=<要过滤的数据流> 这个参数是必须的。它指定了你要筛选过滤的数据流。resource=flag.php
+read=<读链的筛选列表> 该参数可选。可以设定一个或多个过滤器名称，以管道符（|）分隔。php://filter/read=A|B|C/resource=flag.php
+write=<写链的筛选列表> 该参数可选。可以设定一个或多个过滤器名称，以管道符（|）分隔。php://filter/write=A|B|C/resource=flag.php
+<;两个链的筛选列表> 任何没有以 read= 或 write= 作前缀 的筛选器列表会视情况应用于读或写链。php://filter/A|B|C/resource=flag.php
 
 格式：
 ?变量名=filter/read=/resource=/flag
@@ -123,6 +123,14 @@ php://filter/resource=index.php
 ```
 
 利用filter协议读文件，将index.php通过base64编码后进行输出。这样做的好处就是如果不进行编码，文件包含后就不会有输出结果，而是当做php文件执行了，而通过编码后则可以读取文件源码。而使用的convert.base64-encode，就是一种过滤器。
+
+### 字符串过滤器
+用来处理所有的流数据，单纯的字符串过滤器如rot13变换解决不了php文件
+用base64的转换滤器解决php文件
+string.rot13 rot13变换
+string.toupper 转大写字母
+string.tolower 转小写字母
+string.strip_tags 去除html、PHP语言标签 (本特性已自 PHP 7.3.0 起废弃)
 
 ### php://input
 php://input可以访问请求的原始数据的只读流，将post请求的数据当作php代码执行。当传入的参数作为文件名打开时，可以将参数设为php://input,同时post想设置的文件内容，php执行时会将post内容当作文件内容。从而导致任意代码执行。
@@ -295,3 +303,26 @@ php://filter/read=/resource=/flag
 
 ![image](https://github.com/user-attachments/assets/23bd4dd8-830f-4209-9d7f-5b7a0f1d28d5)
 
+php://input没有成功
+
+## Level 7
+这一关要求用php://input
+php://input作为include的直接参数时请求的参数格式是原生(Raw)的内容，无法使用hackbar提交，因为hackbar不支持raw方式
+先访问php://input，先用bursuite打开代理
+
+![image](https://github.com/user-attachments/assets/7d0314e5-2398-4612-bef4-7fe082318137)
+
+发现抓完包里面是乱码，尝试失败了，php://input这个没有解出来，回头看一下大佬的
+
+## Level 8
+这一关要求使用php://filter，通过rot13变换访问flag.txt
+?wrappers=filter/string.rot13/resource=/flag
+
+![image](https://github.com/user-attachments/assets/abc44140-88fd-40ff-b757-900bd410a9b9)
+
+## Level 9
+本题也是php://filter，但是不存在文本格式的flag的了，只能用base64的转换滤器解决php文件
+
+![image](https://github.com/user-attachments/assets/19326150-cf5e-45f6-af21-b025bfd6fe03)
+
+之后进行解码即可得到flag
