@@ -58,6 +58,8 @@ echo "I have a $color $car"; // I have a red BMW
 ## 远程文件包含
 如果PHP的配置选项allow_url_include、allow_url_fopen状态为ON的话，则include/require函数是可以加载远程文件的，这种漏洞被称为远程文件包含(RFI)
 
+利用webshell（可以使用蚁剑构建）植入木马
+
 ![image](https://github.com/user-attachments/assets/e0304d2e-deb5-4635-bf19-c8f5796ff377)
 
 
@@ -215,6 +217,18 @@ PHP:配置php.ini关闭远程文件包含功能(allow_url_include = Off)
 
 尽量不要使用动态包含，可以在需要包含的页面固定写好，如：include("head.php");，不要把被包含的写成变量。
 
+## 其他文件系统函数
+PHP 带有很多内置 URL 风格的封装协议，可用于类似 fopen()、 copy()、 file_exists() 和 filesize() 的文件系统函数。(类似于include函数)
+比如 file_put_contents(), file_get_contents(), file(), readfile()
+
+file_get_contents — 将整个文件读入一个字符串
+
+file_put_contents — 将数据写入文件
+和依次调用 fopen()，fwrite() 以及 fclose() 功能一样。
+fopen — 打开文件或者 URL
+fwrite — 写入文件（可安全用于二进制文件）
+fclose — 关闭一个已打开的文件指针
+
 # PHPinclude-labs
 ## Level 0
 进入后发现源代码中含有include函数，同时界面有提示，backdoor.txt 内容为: <?php @eval($_POST['ctf']); ?>，含有危险的eval函数就可以操作一下
@@ -326,3 +340,21 @@ php://input作为include的直接参数时请求的参数格式是原生(Raw)的
 ![image](https://github.com/user-attachments/assets/19326150-cf5e-45f6-af21-b025bfd6fe03)
 
 之后进行解码即可得到flag
+
+## Level 10
+这道题使用file_get_contents() 函数，这个函数会将整个文件读入一个字符串,同样的他支持封装协议(wrappers)的使用
+可以将这个看为include函数，然后直接输入?file=php://filter/string.rot13/resource=/flag
+
+![image](https://github.com/user-attachments/assets/d6cb207f-ba7d-45f2-a3e4-bb175fd4aeba)
+
+解码后即可得到flag
+
+![image](https://github.com/user-attachments/assets/9d9025dc-10f8-4737-99e8-1db3de1e24fb)
+
+## Level 11
+这关考察_file_put_contents()函数，这将对应过滤器中的Write方法，用于将数据写入文件。
+
+![image](https://github.com/user-attachments/assets/73fdee4c-9955-440a-bd94-285abe2e011d)
+
+但是又失败了
+
