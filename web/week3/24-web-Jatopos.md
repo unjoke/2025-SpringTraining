@@ -358,3 +358,109 @@ php://input作为include的直接参数时请求的参数格式是原生(Raw)的
 
 但是又失败了
 
+# SQL注入-学习笔记
+通过可控输入点达到非预期执行数据库语句，这里的非预期指的是，拼接相应的语句可以拿到数据库里面的其他数据
+
+## SQL基础知识学习
+SQL（Structured Query Language，结构化查询语言）是一种用于管理和操作关系型数据库的标准化编程语言。
+
+SQL 通过一系列的语句和命令来执行数据定义、数据查询、数据操作和数据控制等功能,包括数据插入、查询、更新和删除，数据库模式创建和修改，以及数据访问控制。
+
+要创建一个显示数据库中数据的网站需要：
+RDBMS 数据库程序（比如 MS Access、SQL Server、MySQL） ——SQL的基础
+使用服务器端脚本语言，比如 PHP 或 ASP
+使用 SQL 来获取您想要的数据
+使用 HTML / CSS
+
+### SQL语法
+数据库表：一个数据库通常包含一个或多个表，每个表有一个名字标识（例如:"Websites"），表包含带有数据的记录（行）。
+
+数据库为层级结构
+
+如：在RUNOOB 数据库中创建了 Websites 表
+use RUNOOB; 命令用于选择数据库。
+set names utf8; 命令用于设置使用的字符集。
+SELECT * FROM Websites; 读取数据表的信息。
+
+SQL语句：
+SQL 对大小写不敏感：SELECT 与 select 是相同的。
+
+SELECT - 从数据库中查询数据
+```
+SELECT 列名1, 列名2, ... FROM 表名 WHERE 条件
+
+SELECT column_name(s) 要查询的列
+FROM table_name 要查询的表
+WHERE condition 查询条件（可选）
+ORDER BY column_name [ASC|DESC] 排序方式，ASC 表示升序，DESC 表示降序（可选）
+```
+SELECT * 选取所有列
+
+INSERT INTO - 用于向数据库表中插入新数据。
+```
+INSERT INTO table_name (column1, column2, ...) 要插入数据的表(列)
+VALUES (value1, value2, ...) 对应列的值
+```
+
+UPDATE - 更新数据库中的数据
+```
+UPDATE table_name 要更新数据的表
+SET column1 = value1, column2 = value2, ... 要更新的列及其新值
+WHERE condition 更新条件
+```
+
+DELETE - 从数据库中删除数据
+```
+DELETE FROM table_name 要删除数据的表
+WHERE condition 删除条件
+```
+
+CREATE TABLE：用于创建新的数据库表
+```
+CREATE TABLE table_name ( 要创建的表名
+    column1 data_type constraint, 表的列、列的数据类型、列的约束
+    column2 data_type constraint,
+    ...
+)
+```
+
+CREATE DATABASE - 创建新数据库
+
+ALTER TABLE：用于修改现有数据库表的结构
+```
+ALTER TABLE table_name 要修改的表
+ADD column_name data_type 要添加的列 列的数据类型
+（DROP COLUMN column_name 要删除的列）
+```
+
+ALTER DATABASE - 修改数据库
+
+DROP TABLE：用于删除数据库表
+```
+DROP TABLE table_name
+```
+
+CREATE INDEX - 创建索引（搜索键）
+```
+CREATE INDEX index_name 索引的名称
+ON table_name (column_name) 要索引的列
+```
+
+DROP INDEX - 删除索引
+```
+DROP INDEX index_name 要删除的索引名称
+ON table_name 索引所在的表
+```
+
+WHERE：用于指定筛选条件
+ORDER BY：用于对结果集进行排序
+GROUP BY：用于将结果集按一列或多列进行分组
+HAVING：用于对分组后的结果集进行筛选
+JOIN：用于将两个或多个表的记录结合起来
+DISTINCT：用于返回唯一不同的值
+
+
+
+
+
+
