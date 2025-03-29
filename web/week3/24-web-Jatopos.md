@@ -359,12 +359,10 @@ php://input作为include的直接参数时请求的参数格式是原生(Raw)的
 但是又失败了
 
 # SQL注入-学习笔记
-通过可控输入点达到非预期执行数据库语句，这里的非预期指的是，拼接相应的语句可以拿到数据库里面的其他数据
-
 ## SQL基础知识学习
 SQL（Structured Query Language，结构化查询语言）是一种用于管理和操作关系型数据库的标准化编程语言。
 
-SQL 通过一系列的语句和命令来执行数据定义、数据查询、数据操作和数据控制等功能,包括数据插入、查询、更新和删除，数据库模式创建和修改，以及数据访问控制。
+SQL 通过一系列的语句和命令来执行数据定义、数据查询、数据操作和数据控制等功能,包括数据插入、查询、更新和删除，数据库模式创建和修改，以及数据访问控制。(即SQL是一种数据库查询语言）
 
 要创建一个显示数据库中数据的网站需要：
 RDBMS 数据库程序（比如 MS Access、SQL Server、MySQL） ——SQL的基础
@@ -372,8 +370,22 @@ RDBMS 数据库程序（比如 MS Access、SQL Server、MySQL） ——SQL的基
 使用 SQL 来获取您想要的数据
 使用 HTML / CSS
 
+整体学下来感觉有点像Excel（笑哭）
+
 ### SQL语法
 数据库表：一个数据库通常包含一个或多个表，每个表有一个名字标识（例如:"Websites"），表包含带有数据的记录（行）。
+
+```
++----+--------------+---------------------------+-------+---------+
+| id | name         | url                       | alexa | country |
++----+--------------+---------------------------+-------+---------+
+| 1  | Google       | https://www.google.cm/    | 1     | USA     |
+| 2  | 淘宝          | https://www.taobao.com/   | 13    | CN      |
+| 3  | 菜鸟教程      | http://www.runoob.com/    | 4689  | CN      |
+| 4  | 微博          | http://weibo.com/         | 20    | CN      |
+| 5  | Facebook     | https://www.facebook.com/ | 3     | USA     |
++----+--------------+---------------------------+-------+---------+
+```
 
 数据库为层级结构
 
@@ -388,18 +400,23 @@ SQL 对大小写不敏感：SELECT 与 select 是相同的。
 SELECT - 从数据库中查询数据
 ```
 SELECT 列名1, 列名2, ... FROM 表名 WHERE 条件
+SELECT DISTINCT 用于返回唯一不同的值，去掉同一列中相同的值
 
 SELECT column_name(s) 要查询的列
 FROM table_name 要查询的表
-WHERE condition 查询条件（可选）
+WHERE condition 查询条件（可选）用来筛选某一列的值为xxx的所有数据
 ORDER BY column_name [ASC|DESC] 排序方式，ASC 表示升序，DESC 表示降序（可选）
 ```
 SELECT * 选取所有列
 
-INSERT INTO - 用于向数据库表中插入新数据。
+INSERT INTO - 用于向数据库表中插入新数据。一般插入一整行新的数据
 ```
 INSERT INTO table_name (column1, column2, ...) 要插入数据的表(列)
 VALUES (value1, value2, ...) 对应列的值
+
+如（id列不用插入）
+INSERT INTO Websites (name, url, alexa, country)
+VALUES ('百度','https://www.baidu.com/','4','CN');
 ```
 
 UPDATE - 更新数据库中的数据
@@ -407,12 +424,24 @@ UPDATE - 更新数据库中的数据
 UPDATE table_name 要更新数据的表
 SET column1 = value1, column2 = value2, ... 要更新的列及其新值
 WHERE condition 更新条件
+
+如
+UPDATE Websites 
+SET alexa='5000', country='USA' 
+WHERE name='菜鸟教程';
+（一定不要省略where子句，否则会将 Websites 表中所有数据的 alexa 改为 5000，country 改为 US）
 ```
 
 DELETE - 从数据库中删除数据
 ```
 DELETE FROM table_name 要删除数据的表
 WHERE condition 删除条件
+
+如
+DELETE FROM Websites
+WHERE name='Facebook' AND country='USA';
+
+DELETE FROM table_name; 不删除表的情况下，删除表中所有的行
 ```
 
 CREATE TABLE：用于创建新的数据库表
@@ -452,15 +481,118 @@ DROP INDEX index_name 要删除的索引名称
 ON table_name 索引所在的表
 ```
 
-WHERE：用于指定筛选条件
+WHERE：用于指定筛选条件(如SELECT * FROM Websites WHERE country='CN';)
 ORDER BY：用于对结果集进行排序
 GROUP BY：用于将结果集按一列或多列进行分组
 HAVING：用于对分组后的结果集进行筛选
 JOIN：用于将两个或多个表的记录结合起来
 DISTINCT：用于返回唯一不同的值
 
+AND & OR 运算符用于基于一个以上的条件对记录进行过滤。
+AND 表并列，需要同时满足；OR 表选择，满足一个即可
+如
+```
+SELECT * FROM Websites
+WHERE country='CN'
+AND alexa > 50;
+
+SELECT * FROM Websites
+WHERE country='USA'
+OR country='CN';
+
+或者结合在一起
+AND (country='CN' OR country='USA');
+```
+
+UNION
+合并两个或多个 SELECT 语句的结果，每个 SELECT 语句必须具有相同数量的列，且对应列的数据类型必须相似
+注意区分UNION ALL，UNION去掉了相同的部分，UNION ALL则是直接合并
+```
+SELECT column1, column2, ...
+FROM table1
+UNION
+SELECT column1, column2, ...
+FROM table2;
+![image](https://github.com/user-attachments/assets/9dd6fe43-0aca-4126-956f-8c82b21c538a)
+
+SELECT column1, column2, ...
+FROM table1
+UNION ALL
+SELECT column1, column2, ...
+FROM table2;
+![image](https://github.com/user-attachments/assets/8b554d94-3cca-4a02-83ba-6388a9b395e3)
+```
+
+LIMIT
+限制查询结果返回的记录数量
+limit N : 返回 N 条记录
+offset M : 跳过 M 条记录, 默认 M=0, 单独使用似乎不起作用
+limit N,M : 相当于 limit M offset N , 从第 N 条记录开始, 返回 M 条记录(LIMIT n 等价于 LIMIT 0,n)
+```
+返回表中前number行数据 SELECT column1, column2, ... FROM table_name LIMIT number
+从offset+1行开始返回row_count行数据 SELECT column1, column2, ... FROM table_name LIMIT offset, row_count
+LIMIT 10, 10 返回11-20行数据
+```
+
+## SQL注入
+一种常见的Web安全漏洞，形成的主要原因是web应用程序在接收相关数据参数时未做好过滤，攻击者可以在web应用程序中事先定义好的查询语句的结尾上添加额外的SQL语句，在管理员不知情的情况下实现非法操作，以此来实现欺骗数据库服务器执行非授权的任意查询，从而进一步得到相应的数据信息。
+
+简单来说，就是 构造语句查询信息。
+
+### 基础注入类型
+#### 注入分类
+按输入的参数分为 数字型注入（输入整型参数）、字符型注入（输入字符串）
+按注入的方法分为 Union注入、报错注入、时间注入
+
+#### 注入点
+指可以实行注入的地方，通常是访问数据库的连接，比如说get_post提交
+
+#### 判断是哪种注入
+提交字符一定是字符型，提交数字不一定是数字型
+可以使用?id=1 and 1=1和?id=1 and 1=2判断
+
+如果1=1页面显示正常和原页面一样，并且1=2页面报错或者页面部分数据显示不正常，那么可以确定此处为数字型注入
+
+如果1=1页面显示正常和原页面一样，并且1=2页面报错或者页面部分数据显示不正常，那么可以确定此处为字符型注入
+
+还有一个很巧的方法，如果提交2-1和提交1的结果一样时，则为数字型注入（可以做运算，用-不用+）；如果提交2-1和提交2结果一样时，则为字符型注入
+
+#### 构造闭合
+字符型需要闭合符如id='$id'，数字型不需要闭合符如id=$id
+闭合方式：'   "  ')  ")
+$id, '$id', "$id", ($id)
+
+**判断闭合方式：**
+比如后台为 SELECT username,password FROM users WHERE id = "$id"
+我们传入 $id = '1"'
+后台执行则为 SELECT username,password FROM users WHERE id = "1" "
+在这里我们对 1 完成了闭合构造，但是我们闭合了前序导致后续的 " 没有双引号配对，多出来的这个双引号则会导致报错
+
+大多数情况下，SQL 注入都是黑盒，我们不知道后台到底是怎么写的，所以我们需要一些判断的方法或者技巧
+
+![QQ_1743235028497](https://github.com/user-attachments/assets/82e62199-9d98-4228-a074-4e4bba658276)
+
+![QQ_1743235234198](https://github.com/user-attachments/assets/c2dee42d-7eeb-437e-a37c-0c7388b0c6d4)
+
+**闭合的作用：**
+手工提交闭合符号，结束前一段查询语句，
+后面即可加入其他语句，查询需要的参数
+不需要的语句可以用注释符号‘+’或#或’%23’注释掉
+我们通常在构造完闭合后去注释掉后面的符号
+比如使用 # 或 --+ 或 %23
 
 
+
+
+# sqli_labs
+## Less-1
+进入页面后提示为id赋值
+
+![image](https://github.com/user-attachments/assets/6504e927-2df9-4e51-b334-abc876dc70a3)
+
+得到对应的查询数据
+
+![image](https://github.com/user-attachments/assets/deda09a4-f438-4f77-b574-c21a480efb66)
 
 
 
