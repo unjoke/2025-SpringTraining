@@ -668,6 +668,14 @@ id=0' union select 1,group_concat(username,'~',password),3 from users--+
 6. 使用select语句，查询靶机所有列名
 7. 查询所有用户名密码
 
+### 布尔盲注
+盲注是指攻击者不能直接获取数据库中的信息，需要通过一些技巧来判断或推断出数据库中的数据。盲注主要分为布尔盲注、时间盲注、报错盲注
+
+布尔盲注：web页面只返回true真和false假两种类型，利用页面返回不同，逐个猜解数据
+如在sqli-lab less5中
+如果输入id = 1 AND 1=1 会返回you are in 代表为真值
+如果输入id = 1 AND 1=2 不会返回 代表为假值
+
 # sqli_labs
 ## Less-1
 进入页面后提示为id赋值
@@ -742,3 +750,48 @@ id=0' union select 1,group_concat(username,'~',password),3 from users--+
 查询结果
 
 ![image](https://github.com/user-attachments/assets/2cceb394-e6d4-451d-af65-b445eee8c3fa)
+
+## Less-3
+查询后发现此题是字符型，且以')闭合
+
+![image](https://github.com/user-attachments/assets/aba9140e-7753-4154-b29e-a296d8f9601d)
+
+其它步骤同lss1和lss2了
+
+![image](https://github.com/user-attachments/assets/550db62e-a2c1-40a9-bf0c-1696d3b46abc)
+
+![image](https://github.com/user-attachments/assets/e2005136-6e16-40e6-ad84-a32850f23ffc)
+
+![image](https://github.com/user-attachments/assets/1604fbdd-a0a7-44ff-b15e-d4464d409407)
+
+![image](https://github.com/user-attachments/assets/7d2bee5b-b390-42d7-a260-4c63418ab11b)
+
+![image](https://github.com/user-attachments/assets/f96da3be-42c0-43b8-a0f6-14320daaaa1b)
+
+## Less-4
+这一关以")闭合，其它都同上
+
+![image](https://github.com/user-attachments/assets/d2e290ab-9caf-4ac1-bd24-068193832313)
+
+![image](https://github.com/user-attachments/assets/9fd277c5-63cb-4731-8f06-e7cf79f72bf0)
+
+![image](https://github.com/user-attachments/assets/fa49d3fe-5849-4dab-9863-5625a916cb24)
+
+![image](https://github.com/user-attachments/assets/d4d74d72-3a10-4295-bd2c-792933f39449)
+
+![image](https://github.com/user-attachments/assets/320def5e-dcca-4d0f-aad5-dbf259a86770)
+
+![image](https://github.com/user-attachments/assets/4e16ad6d-3b2c-41fd-8383-f8bbc50cdf47)
+
+## Less-5
+正常去做，发现跟前面的不太一样，查询的信息没有回显，可以选择布尔盲注
+
+![image](https://github.com/user-attachments/assets/cc5a8c1f-e7ae-4a05-8a21-d187977bab31)
+
+判断为'闭合
+
+![image](https://github.com/user-attachments/assets/efbce505-898c-4315-a896-14c7a99a04ee)
+
+由于时间不够了，等晚一点再补上后面的几道题，先写会高数作业...
+
+
