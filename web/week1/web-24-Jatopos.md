@@ -181,11 +181,14 @@ EOF;
 字符串 整型 浮点型 布尔型 数组 
 var_dump() 函数返回变量的数据类型和值
 例如
+```
 <?php 
 $cars=array("Volvo","BMW","Toyota");
 var_dump($cars);
 ?>
+
 array(3) { [0]=> string(5) "Volvo" [1]=> string(3) "BMW" [2]=> string(6) "Toyota" }
+```
 
 php对象（类似于c的struct）
 使用class关键字声明类对象。类是可以包含属性和方法的结构。然后我们在类中定义数据类型，然后在实例化的类中使用数据类型
@@ -194,6 +197,7 @@ php对象（类似于c的struct）
 函数 function 将实现某一功能的代码块封装到一个结构中，实现代码复用（类似于void定义函数）函数可以在定义之前使用
 调用成员使用->
 封装、继承、多态（同一个方法，传入不同的对象，实现不同的效果）
+```
 <?php
 class Car
 {
@@ -206,11 +210,13 @@ class Car
   }
 }
 ?>
+```
 this就是指向当前对象实例的指针，不指向任何其他对象或类
 
 PHP 资源
 resource 是一种特殊变量，保存了到外部资源的一个引用。常见资源数据类型有打开文件、数据库连接、图形画布区域等。
 get_resource_type() 函数可以返回资源类型，如
+```
 <?php
 $c = mysql_connect();
 echo get_resource_type($c)."\n";
@@ -224,22 +230,27 @@ $doc = new_xmldoc("1.0");
 echo get_resource_type($doc->doc)."\n";
 // 打印：domxml document
 ?>
-
+```
 
 
 常量可以用 define() 函数或 const 关键字来定义。
+```
 bool define ( string $name , mixed $value [, bool $case_insensitive = false ] )
+```
 - name：必选参数，常量名称，即标志符。
 - value：必选参数，常量的值。
 - case_insensitive ：false 大小写敏感。
 常量是全局的
+```
 <?php
 // 不区分大小写的常量名
 define("GREETING", "欢迎访问 Runoob.com", true);
 echo greeting;  // 输出 "欢迎访问 Runoob.com"
 ?>
+
 const SITE_URL = "https://www.runoob.com";
 echo SITE_URL; // 输出 "https://www.runoob.com"
+```
 使用常量时，不能在常量名前添加$ 符号，不然会将常量转换成新的未定义变量使用，会导致报错。
 预定义常量、常量数组
 
@@ -247,9 +258,13 @@ php字符串
 将两个字符串变量连接在一起：echo $txt1 . " " . $txt2;
 Hello world! What a nice day!（中间有一个空格）
 strlen() 函数返回字符串的长度
+```
 echo strlen("Hello world!");  12
+```
 strpos() 函数用于在字符串内查找一个字符或一段指定的文本
+```
 echo strpos("Hello world!","world"); 6
+```
 
 PHP 算术运算符（大部分同c）
 ~x 取反  ~1=-2; ~0=-1;
@@ -276,6 +291,7 @@ x xor y 异或 有且仅有一个为true
 
 <=>是组合比较符
 可以轻松实现两个变量的比较
+
 $c = $a <=> $b;
 如果 $a > $b, 则 $c 的值为 1。
 如果 $a == $b, 则 $c 的值为 0。
@@ -286,8 +302,11 @@ PHP If...Else 语句
 
 isset() 函数
 用于检测变量是否已设置并且非 NULL，对数组也有效
+```
 bool isset ( mixed $var [, mixed $... ] )
+```
 - $var：要检测的变量。
+```
 if (isset($var)) {
     echo "变量已设置。" . PHP_EOL;
 }
@@ -306,6 +325,7 @@ var_dump(isset($a, $b)); // FALSE
 $foo = NULL;
 var_dump(isset($foo));   // FALSE
 ?>
+```
 
 PHP的笔记后面会继续补上⁽˙³˙⁾
 
