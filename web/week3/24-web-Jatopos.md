@@ -547,7 +547,7 @@ GROUP BY
 按输入的参数分为 数字型注入（输入整型参数）、字符型注入（输入字符串）
 按注入的方法分为 Union注入、报错注入、时间注入
 
-### Union注入
+### Union注入--字符型注入
 #### 注入点
 指可以实行注入的地方，通常是访问数据库的连接，比如说get_post提交
 
@@ -567,10 +567,14 @@ GROUP BY
 $id, '$id', "$id", ($id)
 
 **判断闭合方式：**
-比如后台为 SELECT username,password FROM users WHERE id = "$id"
-我们传入 $id = '1"'
-后台执行则为 SELECT username,password FROM users WHERE id = "1" "
-在这里我们对 1 完成了闭合构造，但是我们闭合了前序导致后续的 " 没有双引号配对，多出来的这个双引号则会导致报错
+MYSQL数据库的包容性比较强，如果你输错了数据的类型，MYSQL数据库会自动将其转换成正确的数据类型，比如输入1)、1"、1-等，只要数字后面的字符不是闭合符的，数据库都会把你输入的错误的数据转换成正确的数据类型。
+
+例如：在Mysql数据库下，代码如下：
+```
+$id=$_GET[‘id’];
+$sql=“SELECT * FROM name WHERE id=’$id’ LIMIT 0,1”;
+```
+如果输入id=1)则不会报错，如果id输入1'则会报错
 
 大多数情况下，SQL 注入都是黑盒，我们不知道后台到底是怎么写的，所以我们需要一些判断的方法或者技巧
 
@@ -578,14 +582,44 @@ $id, '$id', "$id", ($id)
 
 ![QQ_1743235234198](https://github.com/user-attachments/assets/c2dee42d-7eeb-437e-a37c-0c7388b0c6d4)
 
+法一：
+输入id=1\ 分析报错信息：看\斜杠后面跟着的字符，是什么字符，它的闭合字符就是什么，若是没有，就为数字型。
+
+![image](https://github.com/user-attachments/assets/77a51910-8fbb-4df2-b8d6-9d1c7b5f704d)
+
+![image](https://github.com/user-attachments/assets/1432f740-0291-4a86-810b-afa0cc3b45c8)
+
+法二：
+首先尝试：
+?id=1’
+?id=1”
+结果一：如果都报错
+判断闭合符为：整形闭合。
+
+结果二：如果单引号报错，双引号不报错。
+继续尝试
+?id=1’ –-+
+结果1：无报错
+判断闭合符为：单引号闭合。
+结果2：报错
+判断闭合符可能为：单引号加括号。
+
+结果三：如果单引号不报错，双引号报错。
+继续尝试
+?id=1" -–+
+结果1：结果无报错
+判断闭合符为：双引号闭合。
+结果2：报错
+判断闭合符可能为：双引号加括号。
+
 **闭合的作用：**
-手工提交闭合符号，结束前一段查询语句，
+手工提交闭合符号，结束前一段查询语句
 后面即可加入其他语句，查询需要的参数
 不需要的语句可以用注释符号‘+’或#或’%23’注释掉
 我们通常在构造完闭合后去注释掉后面的符号
 比如使用 # 或 --+ 或 %23
 
-#### 注入方式
+#### 判断列数
 1. 用group by二分法判断默认页面数据列数量（order by也可以）
 如?id=1' group by 4--+会报错
 ?id=1' group by 3--+不会，可以确定有三列
@@ -599,7 +633,7 @@ $id, '$id', "$id", ($id)
 1、查找注入点
 2、判断是字符型还是数字型注入and 1=1 1=2/ 3-1
 3、如果字符型，找到他的闭合方式，「"./）")
-4、判断查询列数，group by order by
+4、判断查询列数，group by或order by
 5、查询回显位置，-1
 
 #### 拿到表名和列名
@@ -607,7 +641,9 @@ information_schema() --库名
 包含所有mysql数据库的简要信息，其中包含tables（表名集合表）和columns（列名集合表）
 tables --表名
 table_name --数据列
-table_schema 这一列是库名，找到security的行
+table_schema 是数据库的名称，找到security的行
+table_name 是具体的表名。
+table_type 表的类型。
 
 group_concat()
 确保所有查询信息（所有表）能放到一行显示出来
@@ -615,11 +651,22 @@ group_concat()
 id=0' union select 1,group_concat(table_name),3 from information_schema.tables where table_schema=database()[即'security']--+
 
 查找数据库security中数据表users的列名
-id=0' union select 1,group_concat(column_name),3 from information_schema.colimns where table_schema='security' and table_name='users'--+
+id=0' union select 1,group_concat(column_name),3 from information_schema.columns where table_schema='security' and table_name='users'--+
 
+或者
+id=0' union select 1,(需要查询的信息),3--+
 #### 查询最终目标
 id=0' union select 1,group_concat(username,'~',password),3 from users--+
 ~用来区分数据
+
+### Union注入--数字型注入
+1. 确定数字型还是字符型
+2. 使用group by的二分法判断union语句中前一个查询的列数
+3. 优化语句，将id改为一个不存在的数字
+4. 使用select语句，查询靶机数据库库名
+5. 使用select语句，查询靶机所有表名
+6. 使用select语句，查询靶机所有列名
+7. 查询所有用户名密码
 
 # sqli_labs
 ## Less-1
@@ -631,7 +678,6 @@ id=0' union select 1,group_concat(username,'~',password),3 from users--+
 
 ![image](https://github.com/user-attachments/assets/56ce2bde-4799-4cfb-901c-3d1921143dae)
 
-
 接着判断是字符型还是数字型注入，令id=2-1，发现没有变化，所以是字符型注入
 
 ![image](https://github.com/user-attachments/assets/377693ff-f548-46bb-a8d2-61f921148a6c)
@@ -641,7 +687,6 @@ id=0' union select 1,group_concat(username,'~',password),3 from users--+
 ![image](https://github.com/user-attachments/assets/4ed1eb5d-bd8c-4666-b7cb-8f6c5572e1e4)
 
 ![image](https://github.com/user-attachments/assets/e848c95d-cb17-4825-a312-58783409aed2)
-
 
 接着判断查询列数，得到是三列
 
@@ -655,5 +700,45 @@ id=0' union select 1,group_concat(username,'~',password),3 from users--+
 
 ![image](https://github.com/user-attachments/assets/b46db9fc-8223-49fe-9ef8-eabbaa6481a4)
 
-然后爆表
+然后去拿表名，得到users这个表名
 
+![image](https://github.com/user-attachments/assets/a26a6c74-1274-46a1-aa43-ac5b9f97f896)
+
+然后查找数据库security中数据表users的列名
+
+![image](https://github.com/user-attachments/assets/5d9ddcfd-fa5e-436d-9473-3f30ef847600)
+
+得到列名后就可以去查询最终目标，得到dhakkan~dumbo,即id=12时的位置
+
+![image](https://github.com/user-attachments/assets/fcfe78e9-bb98-4113-9fc7-4fedc7478ba9)
+
+![image](https://github.com/user-attachments/assets/eb6efc7b-4a40-4d4b-aa22-125327d35df5)
+
+## Less-2
+进入后先判断是哪种类型的注入，可知是数字型
+
+![image](https://github.com/user-attachments/assets/523c4408-83a9-4967-b92b-abead00ea42b)
+
+![image](https://github.com/user-attachments/assets/5df0b58b-3677-4551-a44d-5ddf1c1539c5)
+
+判断列数，得到是3列
+
+![image](https://github.com/user-attachments/assets/8d21dd1d-5ea1-4a2d-93a3-78cc36397b10)
+
+找到回显位置，获得数据库的名字
+
+![image](https://github.com/user-attachments/assets/d1b8d592-6c5f-4409-8a32-f4d555e6a262)
+
+![image](https://github.com/user-attachments/assets/73827868-19e1-4858-a6d4-bb0d49764cae)
+
+拿到表名
+
+![image](https://github.com/user-attachments/assets/2d5beb7e-56c0-4def-a84a-e947c512e67a)
+
+拿到列名
+
+![image](https://github.com/user-attachments/assets/13ee7680-f47f-48e1-820e-e704b8640fc5)
+
+查询结果
+
+![image](https://github.com/user-attachments/assets/2cceb394-e6d4-451d-af65-b445eee8c3fa)
