@@ -51,6 +51,7 @@ Robots 协议（也称为爬虫协议、机器人协议等）是网站与爬虫�
 ![3e25593536b4b1868cb42680703d4158](https://github.com/user-attachments/assets/b7597c5b-6f4f-42d0-87c9-a5e4d83899b3)
 
 # python脚本（DeepSeek）
+```
 import hashlib
 
 def find_md5_prefix(target_prefix):
@@ -66,9 +67,11 @@ if __name__ == "__main__":
     target = '19ca14'
     result = find_md5_prefix(target)
     print(f"找到的值: {result}")
+```
 
 # PHP
 ## 写的第一段PHP代码
+```
 <!DOCTYPE html>
 <html>
 <body>
@@ -80,6 +83,25 @@ echo "Hello CTF!";
 
 </body>
 </html>
+```
+
+## HTML
+超文本标记语言,是一种用于创建网页的标准标记语言。
+后缀名 .html .htm
+html标签，通常成对出现
+```
+<!DOCTYPE html> 声明为 HTML5 文档，不区分大小写
+<html> 元素是 HTML 页面的根元素
+<head> 元素包含了文档的元（meta）数据，如 <meta charset="utf-8"> 定义网页编码格式为 utf-8，否则会出现乱码。
+<title> 元素描述了文档的标题
+<body> 元素包含了可见的页面内容
+<h1> 元素定义一个大标题
+<p> 元素定义一个段落
+<br>换行符
+Web浏览器（如谷歌浏览器，Internet Explorer，Firefox，Safari）是用于读取HTML文件，并将其作为网页显示。
+<a>定义链接
+<img>定义图像
+```
 
 ## PHP语法笔记
 PHP是超文本预处理器。是运行在服务端的开源语言，它可以让Web开发人员快速的书写生成动态的页面。--*PHP是最好的语言！*
@@ -385,11 +407,13 @@ man  命令名 ：查看该命令的详细使⽤⼿册。
 
 Docker
 开源的应用容器引擎，让开发者可以打包他们的应用以及依赖包到一个可抑制的容器中，然后发布到任何流行的Linux机器上，也可以实现虚拟化。沙盒机制，虚拟技术阻止恶意行为。不依赖于任何语言、框架或者包装系统。
+
 什么是RCE
 RCE漏洞，可以让攻击者直接向后台服务器远程注入操作系统命令或者代码，从而控制后台系统。RCE主要指远程代码执行和远程命令执行。
 （RCE代码执行）
 php、java、python
 危害：执行脚本代码
+
 RCE命令执行
 linux、windows
 危害：执行系统命令
@@ -399,8 +423,11 @@ linux、windows
 
 eval()函数
 它可以将⼀个字符串当作PHP代码来执⾏。这个功能⾮常强⼤，但也⾮常危险，如果使⽤不当，可能会导致严重的安全问题。
+```
 eval ( string $code ) : mixed
+```
 eval()  函数会将 $code  字符串中的内容解析为PHP代码，并执⾏它。执⾏的代码会继承 eval()  函数所在⾏的变量作⽤域。也就是说，在 eval()  中可以访问和修改 eval()  函数外部的变量。
+```
 <?php
 $string = "beautiful";
 $time = "winter";
@@ -412,12 +439,17 @@ eval("\$str = \"$str\";");
 echo $str;
 ?>
 
+
 输出
 This is a $string $time morning!
 This is a beautiful winter morning!
+```
 
 system()
+```
 system(string $command,int &$return_var=?)
+```
+
 command:执行command参数指定命令，输出执行结果（可以直接回显）
 system('ls /') 这将会列出根⽬录（/ ）下的所有⽂件和⽬录。
 return_var 返回状态（可选） 0成功 1失败
@@ -425,10 +457,15 @@ return_var 返回状态（可选） 0成功 1失败
 passthru
 执⾏外部程序并且显⽰原始输出 
 类似于system，特殊情况是处理图片数据流时只能用passthru
+```
 passthru(string $command, int &$result_code = null): ?false
+```
 
 exec()
+```
 exec(string $command, array &$output = null, int &$result_code = null): string|false
+```
+
 exec() 执行 command 参数所指定的命令。只能回显最后一行
 如果提供了 output 参数， 那么会用命令执行的输出填充此数组
 使用output参数+echo可以回显全部内容
@@ -439,21 +476,29 @@ shell_exec()
 shell_exec(string $command): string|false|null
 
 <?php
+```
 $output = shell_exec('ls -lart');
 echo "<pre>$output</pre>";
 ?>
+```
+
 执行运算符：
 PHP 支持一个执行运算符：反引号（``）。注意这不是单引号！PHP 将尝试将反引号中的内容作为 shell 命令来执行，并将其输出信息返回（即，可以赋给一个变量而不是简单地丢弃到标准输出）。使用反引号运算符“`”的效果与函数 shell_exec() 相同。
+```
 <?php
 $output = `ls -al`;
 echo "<pre>$output</pre>";
 ?>
+```
+
 var_dump()
 主要⽤于输出变量的详细信息，包括变量的类 型和值。它在调试代码和分析变量状态时⾮常有⽤。
 
 pcntl_exec()
 ⽤于在当前进程空间执⾏指定的程序,不会创建新的⼦进程⽽是替换当前进程。这意味着调⽤pcntl_exec() 之后，原来的PHP脚本将停⽌执⾏，取 ⽽代之的是执⾏指定的程序。
+```
  bool pcntl_exec ( string $path [, array $args [, array $envs ]] )
+
 <?php
 
 //执行ls命令，列出当前⽬录的⽂件
@@ -463,7 +508,10 @@ pcntl_exec("/bin/ls", ["-l"]);
 echo "This line will not be printed.\n";
   
 ?>  
-[图片]
+```
+
+![image](https://github.com/user-attachments/assets/414692be-6515-406a-bcf1-a969154295d4)
+
 
 popen()
 打开进程文件指针
@@ -471,8 +519,9 @@ popen()
 
 一句话木马
 ⼀句话⽊⻢是⼀种简短的恶意代码，通常⽤于在⽬标服务器上创建⼀个后⻔，以便攻击者远程控制该 服务器或执⾏其他恶意操作。它主要出现在Web安全领域，特别是涉及PHP、ASP、JSP等动态语⾔ 的Web应⽤程序中。
- php 的⼀句话⽊⻢：<?php @eval($_POST['a']); ?>
-
+```
+php 的⼀句话⽊⻢：<?php @eval($_POST['a']); ?>
+```
 
 preg_match绕过总结
 1、数组绕过
@@ -480,7 +529,7 @@ preg_match只能处理字符串，当传入的subject是数组时会返回false
 2、PCRE回溯次数限制
 pcre.backtrack_limit给pcre设定了一个回溯次数上限，默认为1000000，如果回溯次数超过这个数字，preg_match会返回false
 [PHP利用PCRE回溯次数限制绕过某些安全限制 | 离别歌](https://www.leavesongs.com/PENETRATION/use-pcre-backtrack-limit-to-bypass-restrict.html)
-
+```
 import requests
 from io import BytesIO
 
@@ -490,6 +539,8 @@ files = {
 
 res = requests.post('http://51.158.75.42:8088/index.php', files=files, allow_redirects=False)
 print(res.headers)
+```
+
 3、换行符
 特殊字符（点，句号)在正则表达式中用来表示除了‘新行’之外的所有字符。所以模式 ∧∧ 5$ 与任何两个字符的、以数字5结尾和以其他非‘新行’字符开头的字符串匹配。模式 ∧∧ 可以匹配任何字符串，换行符（\n, \r）除外
 ![image](https://github.com/user-attachments/assets/426de3d6-3902-41c6-b213-3148275619b9)
