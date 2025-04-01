@@ -778,6 +778,18 @@ updatexml(xml_document,xpath_string,new_value)
 
 其它流程同extractvalue
 
+#### floor()
+涉及函数：
+```
+rand()
+floor()
+concat_ws()
+group by
+as
+count()
+limit
+```
+
 ### 盲注
 盲注是指攻击者不能直接获取数据库中的信息，需要通过一些技巧来判断或推断出数据库中的数据。盲注主要分为布尔盲注、时间盲注、报错盲注
 
