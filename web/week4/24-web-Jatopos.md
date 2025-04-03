@@ -173,8 +173,10 @@ $a = new test();
 echo serialize($a);
 ?>
 O:4:"test":1:{s:9:"testpub";s:6:"benben";} //实际上是%00test%00pub即0test0pub，二进制0 0不显示
+```
 
-**protected受保护属性序列化时，在变量名前加"%00*%00"**
+***protected受保护属性序列化时，在变量名前加"%00*%00"**
+
 ```
 <?php
 highlight_file(__FILE__);
