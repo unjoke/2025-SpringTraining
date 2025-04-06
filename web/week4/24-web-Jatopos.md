@@ -156,7 +156,7 @@ class test{
 $a = new test();
 echo serialize($a);
 ?>
-O:4:"test":1//成员属性的数量:{s:3:"pub";s:6:"benben";}
+O:4:"test":1 //成员属性的数量:{s:3:"pub";s:6:"benben";}
 ```
 
 **private私有属性序列化时，在变量名前加"%00类名%00"**
@@ -213,4 +213,69 @@ $a = new test2();
 echo serialize($a);
 ?>
 O:5:"test2":1:{s:3:"ben";O:4:"test":1:{s:3:"pub";s:6:"benben";}}
+```
+
+## 反序列化基础知识
+### 反序列化的作用
+将序列化后的参数还原成实例化的对象，即将字符串反序列化为对象
+
+需要使用函数unserialize()
+
+1.反序列化之后的内容为一个对象
+
+2.反序列化生成的对象里的值，由反序列化里的值（字符串$a）提供，与原有类预定义的值无关
+
+3.反序列化不改变类的成员方法，需要调用方法后才能触发
+```
+<?php
+highlight_file(__FILE__);
+class test {
+    public  $a = 'benben';
+    protected  $b = 666;
+    private  $c = false;
+    public function displayVar() {
+        echo $this->a;
+    }
+}
+$d = new test();
+$d = serialize($d);
+echo $d."<br />";
+echo urlencode($d)."<br />";
+$a = urlencode($d);
+$b = unserialize(urldecode($a));
+var_dump($b);
+
+?>
+
+ O:4:"test":3:{s:1:"a";s:6:"benben";s:4:"*b";i:666;s:7:"testc";b:0;}
+O%3A4%3A%22test%22%3A3%3A%7Bs%3A1%3A%22a%22%3Bs%3A6%3A%22benben%22%3Bs%3A4%3A%22%00%2A%00b%22%3Bi%3A666%3Bs%3A7%3A%22%00test%00c%22%3Bb%3A0%3B%7D
+object(test)#1 (3) { ["a"]=> string(6) "benben" ["b":protected]=> int(666) ["c":"test":private]=> bool(false) }
+```
+
+### 反序列化漏洞
+反序列化漏洞的成因：
+
+1.反序列化过程中，unserialize()接收的值是可控的，通过修改这个值（字符串），得到所需要的代码，即生成的对象的属性值
+
+2.通过调用方法，触发代码执行
+
+```
+<?php
+highlight_file(__FILE__);
+error_reporting(0);
+class test{
+    public $a = 'echo "this is test!!";';
+    public function displayVar() {
+        eval($this->a);
+    }
+}
+
+$get = $_GET["benben"];  //benben为对象序列化后的字符串
+$b = unserialize($get);  //$b把字符串$get反序列化为对象，更改字符串得到$a的值
+$b->displayVar() ;  //调用方法触发可控代码
+
+?>
+
+例如
+?benben=O:4:"test":1:{s:1:"a";s:13:"system("ls");";}
 ```
