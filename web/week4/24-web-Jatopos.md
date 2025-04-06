@@ -279,3 +279,61 @@ $b->displayVar() ;  //调用方法触发可控代码
 例如
 ?benben=O:4:"test":1:{s:1:"a";s:13:"system("ls");";}
 ```
+
+# 反序列化靶场
+## Level1-类的实例化
+直接将FLAG实例化即可
+
+![image](https://github.com/user-attachments/assets/4515c74b-6b78-49c3-b27b-fbd75097a7c8)
+
+得到flag
+
+![image](https://github.com/user-attachments/assets/c68515cd-4376-4903-ba05-8562ea68c11c)
+
+## Level2-值的传递
+将 $flag_string 赋值给 $free_flag，再通过调用get_free_flag()将他输出出来
+
+![image](https://github.com/user-attachments/assets/fadeb7ad-86c3-4ea2-98bf-7451f45cdb42)
+
+但不知道为什么flag没有显示出来
+
+![image](https://github.com/user-attachments/assets/ea9f1be9-8538-4843-b2ba-dc61c61604e5)
+
+看网上还有一种方法是非预期解也很好
+
+![image](https://github.com/user-attachments/assets/d6b2f3b6-1f9a-4449-aa0b-ab6e7b20ffd7)
+
+![image](https://github.com/user-attachments/assets/8dce264a-4f3b-480b-b2ec-60b717184bbe)
+
+## Level3-值的传递
+直接将三种类型的flag打印连起来即可
+
+![image](https://github.com/user-attachments/assets/c4fc7119-5b45-4b1d-b7e4-80c78685a9c3)
+
+拿到flag：NSSCTF{se3_me_4nd_g3t_mmmme}
+
+## Level4-初体验
+将$flag_is_here序列化后打印出来
+
+![image](https://github.com/user-attachments/assets/6fdc9108-f653-44ee-a317-080d950a294a)
+
+![image](https://github.com/user-attachments/assets/4be94763-80f9-42bc-9939-93a35eea54c0)
+
+拼接起来即可得 NSSCTF{ser4l1ze2se3me}
+
+## Level5-普通值规则
+payload一下各个参数序列化后的值，即可得到flag
+
+o=O:7:"a_class":1:{s:7:"a_value";s:4:"FLAG";}&s=s:5:"IWANT";&a=a:2:{s:1:"a";s:3:"Plz";s:1:"b";s:7:"Give_M3";}&i=i:1;&b=b:1;&n=N;
+
+![image](https://github.com/user-attachments/assets/6407b7cd-519c-4dd0-a783-759b1937bdb5)
+
+## Level6-权限修饰规则
+这题需要对private私有属性和protected受保护属性序列化，即可获得flag
+
+protected_key=O%3A12%3A%22protectedKEY%22%3A1%3A%7Bs%3A16%3A%22%00%2A%00protected_key%22%3Bs%3A13%3A%22protected_key%22%3B%7D&private_key=O%3A10%3A%22privateKEY%22%3A1%3A%7Bs%3A23%3A%22%00privateKEY%00private_key%22%3Bs%3A11%3A%22private_key%22%3B%7D
+
+![image](https://github.com/user-attachments/assets/13a3347d-6a0f-495c-9caa-c88b4abc46be)
+
+
+![image](https://github.com/user-attachments/assets/139af564-f2cd-4bc3-b98d-90a26616b838)
