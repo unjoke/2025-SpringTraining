@@ -8,4 +8,4 @@ https://blog.csdn.net/qq_28205153/article/details/55798628?ops_request_misc=%257
 
 https://blog.csdn.net/weixin_42419429/article/details/136405371?ops_request_misc=&request_id=&biz_id=102&utm_term=AES%20crypto%E5%BA%93%E5%AE%9E%E7%8E%B0&utm_medium=distribute.pc_search_result.none-task-blog-2~all~sobaiduweb~default-1-136405371.142^v102^pc_search_result_base7&spm=1018.2226.3001.4187
 
-了解原理，知道如何运用crypto库比较重要
+了解原理，知道如何运用crypto库比较重要，提交笔记
