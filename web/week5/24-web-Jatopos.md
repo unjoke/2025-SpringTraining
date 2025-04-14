@@ -1,5 +1,5 @@
 # SSTI模版注入-学习笔记
-**<font style="color:rgba(0, 0, 0, 0.87);">模板注入 SSTI(Server-Side Template Injection)」</font>**<font style="color:rgba(0, 0, 0, 0.87);"> ，</font>**<font style="color:rgba(0, 0, 0, 0.87);">数据传递 ** 就是可控的输入点，以 **Jinja2</font>**<font style="color:rgba(0, 0, 0, 0.87);"> 举例，Jinja2 在渲染的时候会把 </font>`<font style="color:rgb(54, 70, 78);background-color:rgb(245, 245, 245);">{{}}</font>`<font style="color:rgba(0, 0, 0, 0.87);"> 包裹的内容当做变量解析替换，所以当我们传入 </font>`<font style="color:rgb(54, 70, 78);background-color:rgb(245, 245, 245);">{{表达式}}</font>`<font style="color:rgba(0, 0, 0, 0.87);"> 时，表达式就会被渲染器执行。</font>
+模板注入 SSTI(Server-Side Template Injection)」 ，数据传递 ** 就是可控的输入点，以 **Jinja2 举例，Jinja2 在渲染的时候会把 {{}} 包裹的内容当做变量解析替换，所以当我们传入 {{表达式}} 时，表达式就会被渲染器执行。
 
 ## python venv
 venv虚拟环境：创建和管理虚拟环境的模块
