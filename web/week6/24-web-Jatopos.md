@@ -5,7 +5,7 @@
 
 先上传.jpg文件再通过burpsuite改为.php，蚁剑连接
 
-
+如果被$deny_ext过滤了，可以改为.php3等格式
 
 2.如果没有过滤<font style="color:rgb(77, 77, 77);">.htaccess文件</font>
 
