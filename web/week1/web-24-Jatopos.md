@@ -329,7 +329,7 @@ var_dump(isset($foo));   // FALSE
 
 PHP的笔记后面会继续补上⁽˙³˙⁾
 
-## RCE语法笔记
+# RCE语法笔记
 前置知识
 Linux
 一种开源的操作系统，兼具图形界面操作和完全的命令行操作，可以使用键盘完成一切操作效率高，系统稳定性高，远程管理方便
@@ -495,8 +495,8 @@ shell_exec()
 通过 shell 执行命令并将完整的输出以字符串的方式返回
 shell_exec(string $command): string|false|null
 
-<?php
 ```
+<?php
 $output = shell_exec('ls -lart');
 echo "<pre>$output</pre>";
 ?>
@@ -583,3 +583,94 @@ Base64使⽤以下64个字符作为编码表：
 根据base64解码规则和php中base64解码宽松性，= 在解码过程开始前会被移除，所以不会影响解码结果，但是+号作为码表的一部分移除会导致解码不正确，注意分别。
 可以用get：/?wrappers=;base64,编码
 
+# RCE-labs
+## [RCE-labs]Level 0 -  代码执行&命令执行
+进入就有，直接取flag
+
+![image](https://github.com/user-attachments/assets/305cd17c-07e1-481c-bb50-e2d41d99a6a2)
+
+## [RCE-labs]Level 1 - 一句话木马和代码执行
+遇到eval()函数，先通过system()函数查找目录，在根目录下找到flag
+
+![image](https://github.com/user-attachments/assets/216b5f16-06ef-4154-b890-53e1652f1141)
+
+直接cat /flag
+
+![image](https://github.com/user-attachments/assets/2e87912f-81d1-4122-91ae-8df5da4e82f1)
+
+## [RCE-labs]Level 2 - PHP代码执行函数
+首先提交action=submit，获得一个函数，这里获得的是array_reduce
+
+![image](https://github.com/user-attachments/assets/d9ba3023-166b-47d5-923a-70c4f637c381)
+
+接着post content=array_reduce($a,print_r($flag))，得到flag
+
+![image](https://github.com/user-attachments/assets/19517dc2-30b6-4db5-99ee-ab1298074715)
+
+以下为其它函数的用法
+
+![image](https://github.com/user-attachments/assets/ff37cdfb-ea7f-4155-b8ba-6ea869190a53)
+
+## [RCE-labs]Level 3 - 命令执行
+查看根目录
+
+![image](https://github.com/user-attachments/assets/8588d230-2419-4a50-af79-e936e5f4b48b)
+
+直接cat /flag即可
+
+![image](https://github.com/user-attachments/assets/1c046780-4ab8-474b-9ee6-9574bf288cd0)
+
+## [RCE-labs]Level 4 - SHELL 运算符
+SHELL 运算符 可以用于控制命令的执行流程，使得你能够根据条件执行不同的命令。
+
+这道题通过get命令查询ip，并在后面注入需要执行的命令，但是不知道为什么&&没有成功
+
+![image](https://github.com/user-attachments/assets/e7422255-0104-4eed-b58f-72827a4529c7)
+
+换成;后成功
+
+![image](https://github.com/user-attachments/assets/7705b9cd-9538-43be-8278-8f890c1ba389)
+
+## [RCE-labs]Level 5 - 黑名单式过滤
+此题发现flag被过滤掉了，还是先查看根目录
+
+![image](https://github.com/user-attachments/assets/fcf033f0-4fb3-4e78-b460-4640e572db96)
+
+直接用''绕过，得到flag
+
+![image](https://github.com/user-attachments/assets/a0732669-6aea-4103-bdee-15d489fd79f5)
+
+```
+或者这样
+?cmd=cat /?lag
+?cmd=cat /????
+?cmd=cat /fl*
+?cmd=cat /fl*？
+?cmd=cat /fla[a-z]
+?cmd=cat /fla[^1-2]
+?cmd=cat /fla\g
+```
+## [RCE-labs]Level 6 - 通配符匹配绕过
+这道题提示用通配符过滤，发现a没有被过滤，直接找到flag
+
+![image](https://github.com/user-attachments/assets/ee7d1a04-edb5-4f1c-bd72-d1f3dea869eb)
+
+或者通过八进制绕过，先查看目录，发现flag在根目录下
+
+![image](https://github.com/user-attachments/assets/7c714799-a237-4ee6-b07f-9adc646ec020)
+
+找到flag
+
+![image](https://github.com/user-attachments/assets/16bbf290-05ef-4a2c-be34-7b0b133b3d74)
+
+## [RCE-labs]Level 7 - 空格过滤
+直接用%09和\绕过即可
+
+![image](https://github.com/user-attachments/assets/0d34d5d3-b168-4249-b31c-3567274c853c)
+
+## [RCE-labs]Level 8 - 文件描述和重定向
+这题考察重定向，可以用分号绕过
+
+![image](https://github.com/user-attachments/assets/46bdd103-0d46-45b2-a352-71b77d46df5e)
+
+![image](https://github.com/user-attachments/assets/457053e2-7880-4fd6-83b2-062d8dee4566)
