@@ -10,7 +10,7 @@
 
 ## 题目
 
-1. 【XXE】[[GHCTF 2025](>﹏<)](https://www.nssctf.cn/problem/6578)
+1. 【XXE】[GHCTF 2025(>﹏<)](https://www.nssctf.cn/problem/6578)
 
 2. 学完ctf-hub的jwt板块，`学习`->`web进阶`->`JSON Web Token`（最后一个不会可以放一下）
 
